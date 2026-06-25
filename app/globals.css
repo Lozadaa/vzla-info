@@ -1,60 +1,63 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Venezuela Unida — sistema de diseño
-   Concepto: "cartel de solidaridad digno". Calma bajo estrés,
-   alto contraste, accesible (WCAG AA), móvil primero.
+   Venezuela Unida — sistema de respuesta a emergencias
+   Registro: sobrio, institucional, claro bajo estrés.
+   Superficies neutras frías, tinta pizarra, color SOLO funcional
+   (no decorativo). Alto contraste, accesible (WCAG AA), móvil primero.
    ============================================================ */
 
 @theme {
-  /* Superficies */
-  --color-paper: #fbf9f4;
-  --color-paper-sunk: #f3eee2;
+  /* Superficies (neutro frío, institucional) */
+  --color-paper: #eceef1;
+  --color-paper-sunk: #e0e4e9;
   --color-card: #ffffff;
-  --color-line: #e6ddcb;
-  --color-line-strong: #d6c9af;
+  --color-line: #d7dce2;
+  --color-line-strong: #bfc6cf;
 
-  /* Tinta / texto */
-  --color-ink: #16202e;
-  --color-ink-soft: #4d5a6c;
-  --color-ink-faint: #8a93a1;
+  /* Tinta / texto (pizarra casi negra) */
+  --color-ink: #14181d;
+  --color-ink-soft: #535d6a;
+  --color-ink-faint: #828b96;
 
-  /* Acentos institucionales */
-  --color-azul: #173e73;
-  --color-azul-ink: #0f2d56;
-  --color-oro: #e9a23b;
-  --color-oro-deep: #b97d18;
+  /* Cromo institucional (grave) */
+  --color-azul: #1b2a3a;
+  --color-azul-ink: #111a25;
 
-  /* Colores por acción (codifican la categoría) */
-  --color-salvo: #2e7d5b; /* verde — estoy a salvo */
+  /* Ámbar SOLO para "pendiente" y advertencias (uso mínimo) */
+  --color-oro: #b5680e;
+  --color-oro-deep: #8a4e0a;
+
+  /* Señales por acción — apagadas y serias, no vibrantes */
+  --color-salvo: #1f7a4d;        /* verde — estoy a salvo */
   --color-salvo-soft: #e4f0ea;
-  --color-busco: #b23a2e; /* rojo ladrillo — busco a alguien */
-  --color-busco-soft: #f6e5e2;
-  --color-info: #173e73; /* azul — tengo información */
-  --color-info-soft: #e3eaf3;
-  --color-ayuda: #c77d2e; /* terracota/oro — ayuda */
-  --color-ayuda-soft: #f6ebdc;
+  --color-busco: #c0392b;        /* rojo emergencia — busco a alguien */
+  --color-busco-soft: #f5e3e1;
+  --color-info: #2a5685;         /* azul acero — tengo información */
+  --color-info-soft: #e4ebf3;
+  --color-ayuda: #1f6e73;        /* verde azulado — ayuda */
+  --color-ayuda-soft: #e1eeef;
 
   /* Funcionales */
   --color-whatsapp: #1fa855;
-  --color-danger: #b23a2e;
-  --color-ok: #2e7d5b;
+  --color-danger: #c0392b;
+  --color-ok: #1f7a4d;
 
-  /* Tipografías (variables inyectadas por next/font) */
-  --font-display: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: var(--font-body), "Public Sans", system-ui, sans-serif;
+  /* Tipografías (inyectadas por next/font) — familia Plex: ingeniería, seriedad */
+  --font-display: var(--font-display), "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: var(--font-body), "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Radios y sombras */
-  --radius-card: 14px;
-  --shadow-card: 0 1px 2px rgba(22, 32, 46, 0.06), 0 8px 24px -12px rgba(22, 32, 46, 0.18);
-  --shadow-lift: 0 4px 8px rgba(22, 32, 46, 0.08), 0 18px 40px -16px rgba(22, 32, 46, 0.28);
+  /* Radios (cuadrados = institucional) y sombras (planas) */
+  --radius-card: 8px;
+  --radius-btn: 6px;
+  --shadow-card: 0 1px 0 rgba(20, 24, 29, 0.04);
+  --shadow-raise: 0 2px 6px rgba(20, 24, 29, 0.1);
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
   }
 
   body {
@@ -70,22 +73,22 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.08;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.12;
     text-wrap: balance;
   }
 
   /* Foco visible y consistente — crítico para accesibilidad */
   :where(a, button, input, textarea, select, [tabindex]):focus-visible {
-    outline: 3px solid var(--color-azul);
+    outline: 3px solid var(--color-info);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   ::selection {
-    background: var(--color-oro);
-    color: var(--color-ink);
+    background: var(--color-azul);
+    color: #fff;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -105,9 +108,9 @@
     top: -64px;
     z-index: 100;
     background: var(--color-ink);
-    color: var(--color-paper);
+    color: #fff;
     padding: 10px 16px;
-    border-radius: 8px;
+    border-radius: 6px;
     font-weight: 600;
     transition: top 0.15s ease;
   }
@@ -115,7 +118,7 @@
     top: 12px;
   }
 
-  /* Contenedor estándar */
+  /* Contenedores */
   .shell {
     width: 100%;
     max-width: 64rem;
@@ -129,11 +132,11 @@
     padding-inline: 1.25rem;
   }
 
-  /* Eyebrow / etiqueta estructural */
+  /* Etiqueta estructural */
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-ink-soft);
   }
@@ -146,7 +149,7 @@
     box-shadow: var(--shadow-card);
   }
 
-  /* Botón sólido */
+  /* Botones */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -154,16 +157,13 @@
     gap: 0.5rem;
     min-height: 52px;
     padding: 0.75rem 1.4rem;
-    border-radius: 10px;
+    border-radius: var(--radius-btn);
     font-weight: 600;
     font-size: 1.0625rem;
     line-height: 1;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
-  }
-  .btn:active {
-    transform: translateY(1px);
+    transition: background-color 0.12s ease, border-color 0.12s ease;
   }
   .btn-primary {
     background: var(--color-azul);
@@ -195,7 +195,7 @@
     width: 100%;
   }
 
-  /* Campos de formulario */
+  /* Campos */
   .field-label {
     display: block;
     font-weight: 600;
@@ -212,20 +212,19 @@
   .textarea,
   .select {
     width: 100%;
-    background: var(--color-paper);
+    background: #fff;
     border: 1.5px solid var(--color-line-strong);
-    border-radius: 10px;
+    border-radius: var(--radius-btn);
     padding: 0.8rem 0.9rem;
     font-size: 1.0625rem;
     color: var(--color-ink);
     font-family: var(--font-body);
-    transition: border-color 0.12s ease, background-color 0.12s ease;
+    transition: border-color 0.12s ease;
   }
   .input:focus,
   .textarea:focus,
   .select:focus {
-    background: #fff;
-    border-color: var(--color-azul);
+    border-color: var(--color-info);
   }
   .textarea {
     min-height: 110px;
@@ -239,21 +238,21 @@
     gap: 0.35rem;
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     padding: 0.25rem 0.55rem;
-    border-radius: 999px;
+    border-radius: 4px;
     font-weight: 600;
   }
   .tag-pending { background: var(--color-oro-deep); color: #fff; }
   .tag-ok { background: var(--color-salvo); color: #fff; }
   .tag-rejected { background: var(--color-ink-faint); color: #fff; }
 
-  /* Folio monoespaciado (código de caso) */
+  /* Folio monoespaciado */
   .folio {
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     color: var(--color-ink-soft);
   }
 }

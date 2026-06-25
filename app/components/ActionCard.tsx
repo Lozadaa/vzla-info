@@ -2,47 +2,39 @@ import Link from "next/link";
 import { ActionMeta } from "@/lib/types";
 
 /**
- * Tarjeta de acción grande. El lomo de color y el folio "01–04"
- * codifican la categoría; toda la tarjeta es un objetivo táctil.
+ * Acción principal. Tarjeta sobria: regla de color a la izquierda como
+ * indicador funcional (no decorativo), título en tinta, instrucción clara.
  */
 export function ActionCard({ action }: { action: ActionMeta }) {
   return (
     <Link
       href={action.href}
-      className="action-card group card relative flex flex-col gap-3 overflow-hidden p-5 sm:p-6 transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5"
-      style={{ minHeight: 160 }}
+      className="card group flex items-center gap-4 p-4 sm:p-5 transition-colors hover:bg-[var(--color-paper-sunk)]"
+      style={{ borderLeft: `4px solid ${action.accent}` }}
     >
-      {/* Lomo de color a la izquierda */}
       <span
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 w-1.5"
-        style={{ background: action.accent }}
-      />
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md font-bold"
+        style={{ background: action.accentSoft, color: action.accent }}
+      >
+        {action.index}
+      </span>
 
-      <div className="flex items-start justify-between gap-3 pl-2">
-        <span className="folio" aria-hidden="true">
-          {action.index}
-        </span>
-        <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg font-bold transition-colors"
-          style={{ background: action.accentSoft, color: action.accent }}
-          aria-hidden="true"
-        >
-          →
-        </span>
-      </div>
-
-      <div className="pl-2">
-        <h2
-          className="text-[1.5rem] sm:text-[1.65rem] font-extrabold leading-[1.05]"
-          style={{ color: action.accent }}
-        >
+      <span className="min-w-0 flex-1">
+        <span className="block text-[1.2rem] font-semibold leading-tight">
           {action.title}
-        </h2>
-        <p className="mt-1.5 text-[0.98rem] text-[var(--color-ink-soft)] leading-snug">
+        </span>
+        <span className="mt-0.5 block text-[0.95rem] text-[var(--color-ink-soft)] leading-snug">
           {action.description}
-        </p>
-      </div>
+        </span>
+      </span>
+
+      <span
+        aria-hidden="true"
+        className="shrink-0 text-[var(--color-ink-faint)] transition-transform group-hover:translate-x-0.5"
+      >
+        →
+      </span>
     </Link>
   );
 }

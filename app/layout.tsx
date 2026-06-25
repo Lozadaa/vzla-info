@@ -1,16 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
+import { EmergencyBar } from "./components/EmergencyBar";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({
+const display = IBM_Plex_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = Public_Sans({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });
@@ -23,30 +26,30 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://venezuelaunida.com"),
+  metadataBase: new URL("https://vzla.info"),
   title: {
-    default: "Venezuela Unida — Reportarse, buscar familiares y encontrar ayuda",
-    template: "%s · Venezuela Unida",
+    default: "Vzla Info — Reportar tu estado, buscar familiares y ubicar ayuda",
+    template: "%s · Vzla Info",
   },
   description:
-    "Plataforma humanitaria para reportarte a salvo, buscar a un familiar, aportar información verificada y ubicar ayuda cercana. Rápida, accesible y con WhatsApp.",
+    "Herramienta comunitaria de respuesta a emergencias: reportá tu estado, buscá a un familiar, aportá información y ubicá ayuda cercana. Verificado por moderadores.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Venezuela Unida",
+    title: "Vzla Info",
   },
   openGraph: {
-    title: "Venezuela Unida",
+    title: "Vzla Info",
     description:
-      "Reportarte a salvo, buscar a un familiar, aportar información y encontrar ayuda cercana.",
+      "Respuesta ciudadana ante emergencias: reportar tu estado, buscar a un familiar, aportar información y ubicar ayuda.",
     type: "website",
     locale: "es_VE",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#173e73",
+  themeColor: "#1b2a3a",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -61,6 +64,7 @@ export default function RootLayout({
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>
+        <EmergencyBar />
         {children}
         <ServiceWorker />
       </body>
