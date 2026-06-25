@@ -38,6 +38,12 @@ export function SiteHeader({ back }: { back?: { href: string; label: string } })
             Muro
           </Link>
           <Link
+            href="/mapa"
+            className="hidden sm:inline px-3 py-2 font-semibold rounded-md hover:bg-[var(--color-paper-sunk)]"
+          >
+            Mapa
+          </Link>
+          <Link
             href="/busco"
             className="hidden sm:inline px-3 py-2 font-semibold rounded-md hover:bg-[var(--color-paper-sunk)]"
           >

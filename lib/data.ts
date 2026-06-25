@@ -2,7 +2,38 @@ import "server-only";
 import { createClient } from "./supabase/server";
 import { DEMO_HELP, DEMO_MISSING } from "./demo";
 import { muroListApproved, muroListPending } from "./muro/db";
+import { aggregateZones, type ZoneCluster } from "./geo";
 import type { HelpListing, MissingPerson, MuroPost, SafeReport } from "./types";
+
+export interface SituationData {
+  clusters: ZoneCluster[];
+  located: number;
+  unlocated: number;
+  total: number;
+}
+
+/** Datos del mapa de situación: personas buscadas agregadas por localidad. */
+export async function getSituationMap(): Promise<SituationData> {
+  const supabase = await createClient();
+  if (!supabase) return { clusters: [], located: 0, unlocated: 0, total: 0 };
+
+  // La vista vu_missing_zones devuelve {zone, n}. Puede tener miles de filas
+  // (PostgREST limita a 1000 por petición); paginamos hasta traerlas todas.
+  const PAGE = 1000;
+  const rows: { zone: string; n: number }[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from("vu_missing_zones")
+      .select("zone, n")
+      .range(from, from + PAGE - 1);
+    if (error || !data || data.length === 0) break;
+    rows.push(...(data as { zone: string; n: number }[]));
+    if (data.length < PAGE) break;
+  }
+
+  const { clusters, located, unlocated } = aggregateZones(rows);
+  return { clusters, located, unlocated, total: located + unlocated };
+}
 
 /** Tweets del muro aprobados (públicos). */
 export async function getMuroPosts(): Promise<MuroPost[]> {
