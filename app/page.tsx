@@ -30,6 +30,47 @@ export default async function Home() {
           </p>
         </section>
 
+        {/* Contexto — por qué existe la plataforma ahora */}
+        <section className="shell mb-4">
+          <div className="card p-5" style={{ borderLeft: "4px solid var(--color-alert)" }}>
+            <p className="eyebrow" style={{ color: "var(--color-alert)" }}>
+              Contexto · 24 de junio de 2026
+            </p>
+            <h2 className="mt-1.5 text-lg font-bold">Terremotos de Yaracuy</h2>
+            <p className="mt-2 text-[0.97rem] text-[var(--color-ink-soft)]">
+              El 24 de junio de 2026, dos sismos sucesivos de magnitud 7,2 y 7,5
+              sacudieron el occidente de Venezuela, con epicentro en Yaracuy
+              (cerca de San Felipe y Yumare). Hubo derrumbes y daños en Caracas,
+              La Guaira, Valencia, Maracay y otros estados, y afectación del
+              aeropuerto de Maiquetía. Esta plataforma reúne reportes ciudadanos
+              para reencontrar familiares y coordinar ayuda.
+            </p>
+            <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              <div>
+                <dt className="folio">Magnitud</dt>
+                <dd className="font-bold tabular-nums">7,2 y 7,5 Mw</dd>
+              </div>
+              <div>
+                <dt className="folio">Fallecidos</dt>
+                <dd className="font-bold tabular-nums">32+</dd>
+              </div>
+              <div>
+                <dt className="folio">Heridos</dt>
+                <dd className="font-bold tabular-nums">700+</dd>
+              </div>
+              <div>
+                <dt className="folio">Intensidad</dt>
+                <dd className="font-bold">IX Mercalli</dd>
+              </div>
+            </dl>
+            <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
+              Cifras preliminares; pueden variar conforme avancen las labores de
+              rescate. Si tu vida corre peligro, llama al 911 antes de usar esta
+              herramienta.
+            </p>
+          </div>
+        </section>
+
         {/* Muro de emergencia — banner + miniaturas (preview) */}
         <MuroPreview />
 
