@@ -13,6 +13,7 @@ export interface QueueItem {
   meta: string;
   body?: string | null;
   contact?: string | null;
+  image?: string | null;
   created_at: string;
 }
 
@@ -28,16 +29,20 @@ const EXPORTABLE = ["safe_reports", "missing_persons", "tips", "help_listings"];
 
 export function Moderation({
   items,
+  published: publishedInit,
   role,
   email,
 }: {
   items: QueueItem[];
+  published: QueueItem[];
   role: "admin" | "volunteer";
   email: string;
 }) {
   const router = useRouter();
   const [queue, setQueue] = useState(items);
+  const [published, setPublished] = useState(publishedInit);
   const [busy, setBusy] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   async function decide(item: QueueItem, status: "approved" | "rejected") {
     const supabase = createClient();
@@ -46,6 +51,21 @@ export function Moderation({
     const { error } = await supabase.from(item.table).update({ status }).eq("id", item.id);
     setBusy(null);
     if (!error) setQueue((q) => q.filter((i) => i.id !== item.id));
+  }
+
+  // Borrado en dos pasos: el primer toque pide confirmación.
+  async function remove(item: QueueItem) {
+    if (confirmId !== item.id) {
+      setConfirmId(item.id);
+      return;
+    }
+    const supabase = createClient();
+    if (!supabase) return;
+    setBusy(item.id);
+    const { error } = await supabase.from(item.table).delete().eq("id", item.id);
+    setBusy(null);
+    setConfirmId(null);
+    if (!error) setPublished((p) => p.filter((i) => i.id !== item.id));
   }
 
   async function exportTable(table: string) {
@@ -113,7 +133,17 @@ export function Moderation({
               {list.map((item) => (
                 <li key={item.id} className="card p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex gap-3">
+                      {item.image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.image}
+                          alt={`Foto de ${item.title}`}
+                          className="h-24 w-20 shrink-0 rounded-md object-cover border"
+                          style={{ borderColor: "var(--color-line)" }}
+                        />
+                      )}
+                      <div className="min-w-0">
                       <h3 className="font-extrabold">{item.title}</h3>
                       <p className="text-sm text-[var(--color-ink-soft)]">{item.meta}</p>
                       {item.body && <p className="mt-1 text-sm">{item.body}</p>}
@@ -123,6 +153,7 @@ export function Moderation({
                       <p className="mt-1 text-xs text-[var(--color-ink-faint)]">
                         {formatDate(item.created_at)}
                       </p>
+                      </div>
                     </div>
                     <div className="flex gap-2 shrink-0">
                       <button
@@ -147,6 +178,49 @@ export function Moderation({
             </ul>
           </section>
         ))
+      )}
+
+      {/* Publicados — gestión y borrado (solo admin) */}
+      {role === "admin" && published.length > 0 && (
+        <section>
+          <h2 className="eyebrow mb-2">Publicados · {published.length}</h2>
+          <p className="text-sm text-[var(--color-ink-soft)] mb-3">
+            Eliminá una publicación si es falsa, duplicada o si la persona ya fue
+            encontrada. Esta acción no se puede deshacer.
+          </p>
+          <ul className="flex flex-col gap-3">
+            {published.map((item) => (
+              <li key={item.id} className="card p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 flex gap-3">
+                    {item.image && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.image}
+                        alt={`Foto de ${item.title}`}
+                        className="h-20 w-16 shrink-0 rounded-md object-cover border"
+                        style={{ borderColor: "var(--color-line)" }}
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="font-extrabold">{item.title}</h3>
+                      <p className="text-sm text-[var(--color-ink-soft)]">{item.meta}</p>
+                      <p className="folio mt-1">{TABLE_LABELS[item.table]}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => remove(item)}
+                    disabled={busy === item.id}
+                    className="btn !min-h-[44px] text-sm shrink-0"
+                    style={{ background: "var(--color-danger)", color: "#fff" }}
+                  >
+                    {confirmId === item.id ? "Confirmar borrado" : "Eliminar"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );
