@@ -139,9 +139,11 @@
     top: 12px;
   }
 
-  /* Franja tricolor nacional — barra fina de identidad (3px) */
+  /* Franja tricolor nacional — barra de identidad con el arco de estrellas
+     blancas sobre el azul, como la bandera de Venezuela. */
   .flag-rule {
-    height: 3px;
+    position: relative;
+    height: 5px;
     width: 100%;
     background: linear-gradient(
       to right,
@@ -149,6 +151,19 @@
       var(--color-flag-azul) 33.33% 66.66%,
       var(--color-flag-rojo) 66.66% 100%
     );
+  }
+  /* Estrellas: fila de puntos blancos sobre el tercio azul */
+  .flag-rule::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 33.33%;
+    width: 33.34%;
+    background-image: radial-gradient(circle at center, #fff 0 1.2px, transparent 1.7px);
+    background-size: 12px 100%;
+    background-repeat: repeat-x;
+    background-position: center;
   }
 
   /* Contenedores */

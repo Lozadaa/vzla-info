@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { Notice } from "../components/Notice";
 import { LoginForm } from "./LoginForm";
@@ -69,12 +70,28 @@ export default async function Page() {
 
   return (
     <Shell>
-      <Moderation
-        items={items}
-        published={published}
-        role={profile.role as "admin" | "volunteer"}
-        email={profile.email ?? user.email ?? ""}
-      />
+      <div className="flex flex-col gap-5">
+        <Link
+          href="/muro/revisar"
+          className="card flex items-center justify-between gap-4 p-4"
+          style={{ borderLeft: "4px solid var(--color-alert)" }}
+        >
+          <span className="min-w-0">
+            <span className="block font-semibold text-lg">Revisar muro de emergencia</span>
+            <span className="block text-sm text-[var(--color-ink-soft)]">
+              Aprobar, rechazar o eliminar los tweets recopilados de redes.
+            </span>
+          </span>
+          <span aria-hidden="true" className="shrink-0 text-[var(--color-ink-faint)]">→</span>
+        </Link>
+
+        <Moderation
+          items={items}
+          published={published}
+          role={profile.role as "admin" | "volunteer"}
+          email={profile.email ?? user.email ?? ""}
+        />
+      </div>
     </Shell>
   );
 }
