@@ -95,7 +95,7 @@ export function HelpExplorer({ listings }: { listings: HelpListing[] }) {
               {l.description && <p className="text-sm text-[var(--color-ink-soft)]">{l.description}</p>}
               <p className="text-sm">📍 {l.zone}</p>
               {l.contact_whatsapp && (
-                <a href={waLink(l.contact_whatsapp, `Hola, te escribo por “${l.title}” en Venezuela Unida.`)} target="_blank" rel="noopener" className="btn btn-wa !min-h-[44px] mt-1">
+                <a href={waLink(l.contact_whatsapp, `Hola, te escribo por “${l.title}” en Vzla Info.`)} target="_blank" rel="noopener" className="btn btn-wa !min-h-[44px] mt-1">
                   Contactar por WhatsApp
                 </a>
               )}

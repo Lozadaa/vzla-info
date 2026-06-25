@@ -52,7 +52,7 @@ export default function HelpMap({ listings }: { listings: HelpListing[] }) {
             {l.contact_whatsapp && (
               <>
                 <br />
-                <a href={waLink(l.contact_whatsapp, `Hola, te escribo por “${l.title}” en Venezuela Unida.`)} target="_blank" rel="noopener">
+                <a href={waLink(l.contact_whatsapp, `Hola, te escribo por “${l.title}” en Vzla Info.`)} target="_blank" rel="noopener">
                   Contactar por WhatsApp
                 </a>
               </>

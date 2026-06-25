@@ -9,18 +9,17 @@ export default function Home() {
     <>
       <SiteHeader />
       <main id="contenido">
-        {/* Hero — directo y tranquilizador */}
-        <section className="shell pt-10 pb-8 sm:pt-14 sm:pb-10">
-          <p className="eyebrow">Plataforma humanitaria · Venezuela</p>
-          <h1 className="mt-3 text-[2.3rem] sm:text-[3.25rem] font-extrabold leading-[1.02] max-w-3xl">
-            En la incertidumbre,{" "}
-            <span style={{ color: "var(--color-azul)" }}>un lugar</span> para
-            reencontrarse.
+        {/* Encabezado — directo y funcional, sin tono publicitario */}
+        <section className="shell pt-9 pb-7 sm:pt-12 sm:pb-9">
+          <p className="eyebrow">Respuesta ciudadana ante emergencias</p>
+          <h1 className="mt-3 text-[1.95rem] sm:text-[2.6rem] font-semibold leading-[1.08] max-w-3xl">
+            Reporta tu estado, busca a los tuyos y ubica ayuda.
           </h1>
-          <p className="mt-4 text-lg text-[var(--color-ink-soft)] max-w-2xl">
-            Repórtate a salvo, busca a un familiar, aporta información o encuentra
-            ayuda cerca. Sin necesidad de cuenta, revisado por personas y pensado
-            para tu teléfono.
+          <p className="mt-4 text-[1.05rem] text-[var(--color-ink-soft)] max-w-2xl">
+            Herramienta comunitaria para reconectar con familiares y localizar
+            recursos después de una emergencia. Cada reporte es verificado por un
+            moderador antes de publicarse. No reemplaza a los servicios oficiales
+            de emergencia.
           </p>
         </section>
 
@@ -28,11 +27,11 @@ export default function Home() {
         <section className="shell mb-4">
           <Link
             href="/muro"
-            className="card flex items-center gap-4 p-4 transition-transform hover:-translate-y-0.5"
-            style={{ borderLeft: "6px solid var(--color-alert)" }}
+            className="card flex items-center gap-4 p-4"
+            style={{ borderLeft: "4px solid var(--color-alert)" }}
           >
             <span
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-xl"
               style={{ background: "var(--color-alert-soft)" }}
               aria-hidden="true"
             >
@@ -40,7 +39,7 @@ export default function Home() {
             </span>
             <span className="min-w-0">
               <span className="flex items-center gap-2">
-                <span className="font-extrabold text-lg">Muro de emergencia</span>
+                <span className="font-semibold text-lg">Muro de emergencia</span>
                 <span
                   className="tag"
                   style={{ background: "var(--color-alert)", color: "#fff" }}
@@ -49,53 +48,70 @@ export default function Home() {
                 </span>
               </span>
               <span className="block text-sm text-[var(--color-ink-soft)]">
-                Reportes recopilados de redes sobre desaparecidos y necesidades
-                urgentes, revisados por moderadores.
+                Reportes recopilados de redes sobre personas desaparecidas y
+                necesidades urgentes, revisados por moderadores.
               </span>
             </span>
           </Link>
         </section>
 
-        {/* Las 4 acciones — el corazón de la app */}
-        <section className="shell" aria-label="Acciones principales">
-          <div className="grid gap-4 sm:grid-cols-2">
+        {/* Las 4 acciones */}
+        <section className="shell" aria-label="Acciones">
+          <h2 className="eyebrow mb-3">Elige una opción</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+
             {ACTIONS.map((a) => (
               <ActionCard key={a.key} action={a} />
             ))}
           </div>
         </section>
 
-        {/* Tira de confianza */}
-        <section className="shell mt-10">
-          <ul className="grid gap-3 sm:grid-cols-3 text-sm">
-            <li className="card p-4 flex items-start gap-3">
-              <span aria-hidden="true" className="text-xl">🪪</span>
-              <span>
-                <strong className="block">Sin cuenta</strong>
-                <span className="text-[var(--color-ink-soft)]">
-                  Reporta en segundos. No pedimos registro para ayudarte.
+        {/* Información factual: cómo funciona + números de emergencia */}
+        <section className="shell mt-9 grid gap-4 md:grid-cols-[1.4fr_1fr]">
+          <div className="card p-5">
+            <h2 className="text-base font-semibold">Cómo funciona</h2>
+            <ol className="mt-3 flex flex-col gap-3 text-[0.95rem]">
+              <li className="flex gap-3">
+                <span className="folio mt-0.5">1</span>
+                <span>Completas un reporte. No necesitas crear una cuenta.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="folio mt-0.5">2</span>
+                <span>Un moderador lo revisa antes de hacerlo público.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="folio mt-0.5">3</span>
+                <span>
+                  Una vez aprobado, aparece en la lista o el mapa y puede
+                  difundirse por WhatsApp.
                 </span>
-              </span>
-            </li>
-            <li className="card p-4 flex items-start gap-3">
-              <span aria-hidden="true" className="text-xl">🛡️</span>
-              <span>
-                <strong className="block">Revisado por personas</strong>
-                <span className="text-[var(--color-ink-soft)]">
-                  Cada publicación pasa por moderación antes de hacerse pública.
-                </span>
-              </span>
-            </li>
-            <li className="card p-4 flex items-start gap-3">
-              <span aria-hidden="true" className="text-xl">💬</span>
-              <span>
-                <strong className="block">Integrado con WhatsApp</strong>
-                <span className="text-[var(--color-ink-soft)]">
-                  Comparte y contacta por el canal que ya usas todos los días.
-                </span>
-              </span>
-            </li>
-          </ul>
+              </li>
+            </ol>
+          </div>
+
+          <div
+            className="card p-5"
+            style={{ borderLeft: "4px solid var(--color-busco)" }}
+          >
+            <h2 className="text-base font-semibold">Números de emergencia</h2>
+            <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
+              Para auxilio inmediato, llama antes de usar esta herramienta.
+            </p>
+            <ul className="mt-3 flex flex-col gap-2 text-[0.95rem]">
+              <li className="flex items-center justify-between gap-3">
+                <span>Emergencias</span>
+                <a href="tel:911" className="font-semibold tabular-nums underline underline-offset-2">
+                  911
+                </a>
+              </li>
+              <li className="flex items-center justify-between gap-3">
+                <span>Protección Civil / Bomberos</span>
+                <a href="tel:171" className="font-semibold tabular-nums underline underline-offset-2">
+                  171
+                </a>
+              </li>
+            </ul>
+          </div>
         </section>
       </main>
       <SiteFooter />

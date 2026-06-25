@@ -36,7 +36,7 @@ export function MissingActions({ person }: { person: MissingPerson }) {
 
       {person.contact_whatsapp && (
         <a
-          href={waLink(person.contact_whatsapp, `Hola, escribo por el reporte de ${person.full_name} (folio ${person.folio}) en Venezuela Unida.`)}
+          href={waLink(person.contact_whatsapp, `Hola, escribo por el reporte de ${person.full_name} (folio ${person.folio}) en Vzla Info.`)}
           target="_blank"
           rel="noopener"
           className="btn btn-ghost btn-block sm:col-span-2"

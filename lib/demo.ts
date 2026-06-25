@@ -2,39 +2,8 @@
 // para poder recorrer y evaluar el diseño sin backend.
 import type { HelpListing, MissingPerson, MuroPost } from "./types";
 
-export const DEMO_MISSING: MissingPerson[] = [
-  {
-    id: "demo-1",
-    folio: "VU-7K2A9",
-    full_name: "Carlos Pérez Rivas",
-    age: 34,
-    photo_url: null,
-    last_seen_zone: "Av. Sucre, Maracay",
-    last_seen_at: "2026-06-21",
-    description:
-      "Estatura media, camisa azul y jeans. Salió a trabajar y no regresó. Usa lentes.",
-    reporter_relation: "hermana",
-    contact_whatsapp: "+584120000000",
-    status: "approved",
-    found: false,
-    created_at: "2026-06-22T10:00:00Z",
-  },
-  {
-    id: "demo-2",
-    folio: "VU-3F1Q4",
-    full_name: "Ana Lucía Mendoza",
-    age: 19,
-    photo_url: null,
-    last_seen_zone: "Terminal de Petare, Caracas",
-    last_seen_at: "2026-06-23",
-    description: "Cabello rizado, mochila roja. Iba rumbo a casa de una tía.",
-    reporter_relation: "madre",
-    contact_whatsapp: "+584140000000",
-    status: "approved",
-    found: false,
-    created_at: "2026-06-23T18:30:00Z",
-  },
-];
+// Sin desaparecidos de ejemplo: las personas buscadas son siempre reales.
+export const DEMO_MISSING: MissingPerson[] = [];
 
 export const DEMO_HELP: HelpListing[] = [
   {

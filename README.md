@@ -1,6 +1,6 @@
-# Venezuela Unida
+# Vzla Info
 
-PWA humanitaria para que las personas puedan **reportarse a salvo, buscar familiares, aportar información verificada y ubicar ayuda cercana**, con integración a WhatsApp y un mapa comunitario moderado.
+PWA de respuesta a emergencias para que las personas puedan **reportar su estado, buscar familiares, aportar información verificada y ubicar ayuda cercana**, con integración a WhatsApp y un mapa comunitario moderado.
 
 Una web con 4 acciones grandes, accesible, rápida y clara:
 

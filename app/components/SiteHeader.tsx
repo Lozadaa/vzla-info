@@ -42,12 +42,6 @@ export function SiteHeader({ back }: { back?: { href: string; label: string } })
           <Link href="/ayuda" className="hidden sm:inline px-3 py-2 font-semibold rounded-lg hover:bg-[var(--color-paper-sunk)]">
             Ayuda
           </Link>
-          <Link
-            href="/admin"
-            className="px-3 py-2 font-semibold rounded-lg text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-sunk)]"
-          >
-            Moderación
-          </Link>
         </nav>
       </div>
     </header>

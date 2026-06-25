@@ -60,13 +60,18 @@ export default async function Page() {
     );
   }
 
-  // Cargar pendientes de todas las tablas
-  const items = await loadQueue(supabase);
+  // Cargar pendientes (todos) y publicados (solo si es admin, para borrar)
+  const isAdmin = profile.role === "admin";
+  const [items, published] = await Promise.all([
+    loadQueue(supabase),
+    isAdmin ? loadPublished(supabase) : Promise.resolve([] as QueueItem[]),
+  ]);
 
   return (
     <Shell>
       <Moderation
         items={items}
+        published={published}
         role={profile.role as "admin" | "volunteer"}
         email={profile.email ?? user.email ?? ""}
       />
@@ -120,6 +125,7 @@ async function loadQueue(supabase: DB): Promise<QueueItem[]> {
       meta: `Buscada · última vez en ${r.last_seen_zone}`,
       body: r.description,
       contact: r.contact_whatsapp,
+      image: r.photo_url,
       created_at: r.created_at,
     });
   }
@@ -156,6 +162,51 @@ async function loadQueue(supabase: DB): Promise<QueueItem[]> {
           .filter(Boolean)
           .join(" · ") || null,
       contact: null,
+      created_at: r.created_at,
+    });
+  }
+
+  return items.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+}
+
+// Contenido público (approved) que un admin puede eliminar.
+async function loadPublished(supabase: DB): Promise<QueueItem[]> {
+  const approved = (t: string) =>
+    supabase.from(t).select("*").eq("status", "approved").order("created_at", { ascending: false });
+
+  const [safe, missing, help] = await Promise.all([
+    approved("safe_reports"),
+    approved("missing_persons"),
+    approved("help_listings"),
+  ]);
+
+  const items: QueueItem[] = [];
+
+  for (const r of safe.data ?? []) {
+    items.push({
+      table: "safe_reports",
+      id: r.id,
+      title: r.full_name,
+      meta: `A salvo · ${r.zone}`,
+      created_at: r.created_at,
+    });
+  }
+  for (const r of missing.data ?? []) {
+    items.push({
+      table: "missing_persons",
+      id: r.id,
+      title: r.full_name + (r.age ? `, ${r.age} años` : ""),
+      meta: `Buscada · ${r.last_seen_zone}`,
+      image: r.photo_url,
+      created_at: r.created_at,
+    });
+  }
+  for (const r of help.data ?? []) {
+    items.push({
+      table: "help_listings",
+      id: r.id,
+      title: r.title,
+      meta: `${r.kind === "offer" ? "Ofrece" : "Necesita"} · ${categoryLabel(r.category)} · ${r.zone}`,
       created_at: r.created_at,
     });
   }

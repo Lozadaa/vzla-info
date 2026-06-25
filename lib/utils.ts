@@ -24,7 +24,7 @@ export function shareMissingMessage(p: MissingPerson, url: string): string {
     `Si tienes información, repórtala aquí:`,
     url,
     "",
-    "Vía Venezuela Unida",
+    "Vía Vzla Info",
   ]
     .filter(Boolean)
     .join("\n");

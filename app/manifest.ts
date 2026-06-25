@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Venezuela Unida",
-    short_name: "VE Unida",
+    name: "Vzla Info",
+    short_name: "Vzla Info",
     description:
-      "Reportarte a salvo, buscar a un familiar, aportar información y encontrar ayuda cercana.",
+      "Respuesta a emergencias: reportar tu estado, buscar a un familiar, aportar información y ubicar ayuda.",
     start_url: "/",
     display: "standalone",
     background_color: "#fbf9f4",

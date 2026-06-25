@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** Emblema: pin de ubicación con corazón — humanitario + "ubicar". */
+/** Emblema: pin de ubicación con punto de alerta — sobrio, funcional. */
 export function BrandMark({ size = 32 }: { size?: number }) {
   return (
     <svg
@@ -15,10 +15,7 @@ export function BrandMark({ size = 32 }: { size?: number }) {
         d="M20 3c-7.7 0-14 6.1-14 13.7C6 26.6 20 37 20 37s14-10.4 14-20.3C34 9.1 27.7 3 20 3Z"
         fill="var(--color-azul)"
       />
-      <path
-        d="M20 26.5s-6.2-3.9-6.2-8.4a3.5 3.5 0 0 1 6.2-2.2 3.5 3.5 0 0 1 6.2 2.2c0 4.5-6.2 8.4-6.2 8.4Z"
-        fill="var(--color-oro)"
-      />
+      <circle cx="20" cy="16.4" r="4.6" fill="var(--color-busco)" />
     </svg>
   );
 }
@@ -34,7 +31,7 @@ export function Brand({
     <Link
       href="/"
       className="inline-flex items-center gap-2.5"
-      aria-label="Venezuela Unida, ir al inicio"
+      aria-label="Vzla Info, ir al inicio"
     >
       <BrandMark size={size} />
       {withText && (
@@ -42,7 +39,7 @@ export function Brand({
           style={{ fontFamily: "var(--font-display)" }}
           className="text-[1.05rem] font-extrabold tracking-tight leading-none"
         >
-          Venezuela<span style={{ color: "var(--color-oro-deep)" }}> Unida</span>
+          Vzla <span className="font-normal text-[var(--color-ink-soft)]">Info</span>
         </span>
       )}
     </Link>
