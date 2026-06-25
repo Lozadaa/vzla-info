@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "../supabase/server";
 import { tweetUrlToPost } from "./oembed";
-import { fetchTweetScreenshot, saveScreenshotLocal } from "./screenshot";
+import { fetchImageBytes, saveImageLocal } from "./screenshot";
 import {
   storeDelete,
   storeInsert,
@@ -62,17 +62,21 @@ export async function muroIngest(rawUrl: string): Promise<MuroPost> {
 
   if (supabase) {
     try {
-      // Screenshot → Supabase Storage (bucket público "fotos").
-      const buf = await fetchTweetScreenshot(post.tweet_url);
-      if (buf) {
-        const filePath = `muro/${post.tweet_id}.png`;
-        const { error: upErr } = await supabase.storage
-          .from(STORAGE_BUCKET)
-          .upload(filePath, buf, { contentType: "image/png", upsert: true });
-        if (!upErr) {
-          post.image_url = supabase.storage
+      // Re-alojamos la imagen del tweet en Supabase Storage (bucket "fotos")
+      // para no depender del enlace de twimg. Si no hay imagen, se omite.
+      if (post.image_url) {
+        const buf = await fetchImageBytes(post.image_url);
+        if (buf) {
+          const filePath = `muro/${post.tweet_id}.jpg`;
+          const { error: upErr } = await supabase.storage
             .from(STORAGE_BUCKET)
-            .getPublicUrl(filePath).data.publicUrl;
+            .upload(filePath, buf, { contentType: "image/jpeg", upsert: true });
+          if (!upErr) {
+            post.image_url = supabase.storage
+              .from(STORAGE_BUCKET)
+              .getPublicUrl(filePath).data.publicUrl;
+          }
+          // Si la subida falla, dejamos la URL original de twimg como respaldo.
         }
       }
 
@@ -105,7 +109,10 @@ export async function muroIngest(rawUrl: string): Promise<MuroPost> {
     }
   }
 
-  post.image_url = await saveScreenshotLocal(post.tweet_url, post.id);
+  // Sin Supabase (dev/demo): re-alojamos la imagen en disco si la hay.
+  if (post.image_url) {
+    post.image_url = await saveImageLocal(post.image_url, post.id);
+  }
   return storeInsert(post);
 }
 
@@ -121,13 +128,19 @@ export async function muroSetStatus(
     try {
       const patch: Record<string, unknown> = { status };
       if (category) patch.category = category;
-      const { error } = await supabase
+      // `.select()` nos devuelve las filas realmente modificadas. Si RLS bloquea
+      // la actualización (sesión sin permisos de moderador), el UPDATE afecta 0
+      // filas SIN error: antes eso devolvía `true` y la aprobación se perdía en
+      // silencio. Ahora exigimos que haya vuelto al menos una fila.
+      const { data, error } = await supabase
         .from("muro_posts")
         .update(patch)
-        .eq("id", id);
-      if (!error) return true;
+        .eq("id", id)
+        .select("id");
+      if (error) throw error;
+      return Boolean(data && data.length > 0);
     } catch {
-      // fallback local
+      // Error de conexión real (Supabase caído en dev): caemos al almacén local.
     }
   }
   return storeSetStatus(id, status, category) !== null;

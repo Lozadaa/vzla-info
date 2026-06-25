@@ -34,22 +34,24 @@ export async function POST(request: Request) {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("id")
-          .eq("id", user.id)
-          .maybeSingle();
-        if (!profile) {
-          return NextResponse.json(
-            { error: "No tienes permisos de moderación." },
-            { status: 403 },
-          );
-        }
+      if (!user) {
+        // Supabase configurado pero sin sesión: NO caer a un no-op silencioso
+        // (RLS rechazaría el UPDATE sin error y la aprobación se perdería).
+        return NextResponse.json({ error: "Inicia sesión." }, { status: 401 });
       }
-      // Si no hay user pero Supabase está caído en dev, muroSetStatus cae a local.
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!profile) {
+        return NextResponse.json(
+          { error: "No tienes permisos de moderación." },
+          { status: 403 },
+        );
+      }
     } catch {
-      // Supabase inaccesible: seguimos con el almacén local (dev).
+      // Supabase inaccesible (caído en dev): seguimos con el almacén local.
     }
   }
 
