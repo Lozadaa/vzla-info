@@ -74,3 +74,11 @@ export function storeSetStatus(
   writeAll(posts);
   return posts[i];
 }
+
+export function storeDelete(id: string): boolean {
+  const posts = readAll();
+  const next = posts.filter((p) => p.id !== id);
+  if (next.length === posts.length) return false;
+  writeAll(next);
+  return true;
+}

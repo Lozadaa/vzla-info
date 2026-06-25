@@ -4,7 +4,7 @@ import { SiteHeader } from "../../components/SiteHeader";
 import { PageIntro } from "../../components/PageIntro";
 import { Notice } from "../../components/Notice";
 import { MuroModeration } from "./MuroModeration";
-import { getMuroPending } from "@/lib/data";
+import { getMuroPending, getMuroPosts } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -16,13 +16,14 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   // Control de acceso: solo moderadores (igual que /admin).
+  let isAdmin = true; // en modo demo (sin Supabase) se permite probar todo
   const supabase = await createClient();
   if (supabase) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     const { data: profile } = user
-      ? await supabase.from("profiles").select("id").eq("id", user.id).maybeSingle()
+      ? await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle()
       : { data: null };
 
     if (!profile) {
@@ -41,9 +42,13 @@ export default async function Page() {
         </>
       );
     }
+    isAdmin = profile.role === "admin";
   }
 
-  const pending = await getMuroPending();
+  const [pending, published] = await Promise.all([
+    getMuroPending(),
+    isAdmin ? getMuroPosts() : Promise.resolve([]),
+  ]);
 
   return (
     <>
@@ -56,7 +61,7 @@ export default async function Page() {
           accent="var(--color-alert)"
         />
         <div className="shell pb-12">
-          <MuroModeration initialPosts={pending} />
+          <MuroModeration initialPosts={pending} published={published} isAdmin={isAdmin} />
         </div>
       </main>
     </>

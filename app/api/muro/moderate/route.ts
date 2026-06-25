@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { muroSetStatus } from "@/lib/muro/db";
+import { muroDelete, muroSetStatus } from "@/lib/muro/db";
 import type { MuroCategory, ReportStatus } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -54,6 +54,46 @@ export async function POST(request: Request) {
   }
 
   const ok = await muroSetStatus(id, status, category);
+  if (!ok) {
+    return NextResponse.json({ error: "No se encontró el tweet." }, { status: 404 });
+  }
+  return NextResponse.json({ ok: true });
+}
+
+// DELETE /api/muro/moderate?id=<uuid>
+// Elimina definitivamente un tweet publicado. Solo administradores.
+export async function DELETE(request: Request) {
+  const id = new URL(request.url).searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "Falta el id." }, { status: 400 });
+  }
+
+  const supabase = await createClient();
+  if (supabase) {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        return NextResponse.json({ error: "Inicia sesión." }, { status: 401 });
+      }
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profile?.role !== "admin") {
+        return NextResponse.json(
+          { error: "Solo un administrador puede eliminar publicaciones." },
+          { status: 403 },
+        );
+      }
+    } catch {
+      // Supabase inaccesible en dev: seguimos con el almacén local.
+    }
+  }
+
+  const ok = await muroDelete(id);
   if (!ok) {
     return NextResponse.json({ error: "No se encontró el tweet." }, { status: 404 });
   }

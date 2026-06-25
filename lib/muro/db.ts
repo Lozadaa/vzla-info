@@ -3,6 +3,7 @@ import { createClient } from "../supabase/server";
 import { tweetUrlToPost } from "./oembed";
 import { fetchTweetScreenshot, saveScreenshotLocal } from "./screenshot";
 import {
+  storeDelete,
   storeInsert,
   storeListApproved,
   storeListByStatus,
@@ -130,4 +131,18 @@ export async function muroSetStatus(
     }
   }
   return storeSetStatus(id, status, category) !== null;
+}
+
+// Elimina definitivamente un tweet del muro (solo admins; lo aplica RLS).
+export async function muroDelete(id: string): Promise<boolean> {
+  const supabase = await createClient();
+  if (supabase) {
+    try {
+      const { error } = await supabase.from("muro_posts").delete().eq("id", id);
+      if (!error) return true;
+    } catch {
+      // fallback local
+    }
+  }
+  return storeDelete(id);
 }

@@ -152,7 +152,8 @@
       var(--color-flag-rojo) 66.66% 100%
     );
   }
-  /* Estrellas: fila de puntos blancos sobre el tercio azul */
+  /* Estrellas: exactamente 7 puntos blancos, centrados y simétricos sobre el
+     tercio azul (como el arco de estrellas de la bandera de Venezuela). */
   .flag-rule::after {
     content: "";
     position: absolute;
@@ -160,10 +161,19 @@
     bottom: 0;
     left: 33.33%;
     width: 33.34%;
-    background-image: radial-gradient(circle at center, #fff 0 1.2px, transparent 1.7px);
-    background-size: 12px 100%;
-    background-repeat: repeat-x;
-    background-position: center;
+    background-image:
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px),
+      radial-gradient(circle, #fff 1.1px, transparent 1.6px);
+    background-repeat: no-repeat;
+    background-size: 5px 100%;
+    background-position:
+      7.14% center, 21.43% center, 35.71% center, 50% center,
+      64.29% center, 78.57% center, 92.86% center;
   }
 
   /* Contenedores */
