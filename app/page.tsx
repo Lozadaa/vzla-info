@@ -7,10 +7,13 @@ import { MuroPreview } from "./components/MuroPreview";
 import { Phone, AlertTriangle } from "./components/icons";
 import { ACTIONS } from "@/lib/types";
 import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
-import { getMissingPersons } from "@/lib/data";
+import { getMissingPersons, getReunionsCount } from "@/lib/data";
 
 export default async function Home() {
-  const missing = await getMissingPersons(6);
+  const [missing, reunions] = await Promise.all([
+    getMissingPersons(6),
+    getReunionsCount(),
+  ]);
 
   return (
     <>
@@ -28,6 +31,20 @@ export default async function Home() {
             moderador antes de publicarse. No reemplaza a los servicios oficiales
             de emergencia.
           </p>
+
+          {reunions > 0 && (
+            <p
+              className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+              style={{ background: "var(--color-salvo-soft)", color: "var(--color-salvo)" }}
+            >
+              <span
+                aria-hidden="true"
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: "var(--color-salvo)" }}
+              />
+              {reunions} {reunions === 1 ? "familia reconectada" : "familias reconectadas"} hasta ahora
+            </p>
+          )}
         </section>
 
         {/* Contexto — por qué existe la plataforma ahora */}

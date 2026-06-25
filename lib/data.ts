@@ -30,6 +30,7 @@ export async function getMissingPersons(limit?: number): Promise<MissingPerson[]
       .from("missing_persons")
       .select("*")
       .eq("status", "approved")
+      .eq("found", false) // los reencontrados salen de la búsqueda activa
       .order("created_at", { ascending: false });
 
   // Caso preview: una sola consulta acotada.
@@ -72,6 +73,14 @@ export async function getSafeReports(): Promise<SafeReport[]> {
     .eq("status", "approved")
     .order("created_at", { ascending: false });
   return (data as SafeReport[]) ?? [];
+}
+
+/** Cuántas personas fueron reencontradas (contador público de esperanza). */
+export async function getReunionsCount(): Promise<number> {
+  const supabase = await createClient();
+  if (!supabase) return 0;
+  const { data } = await supabase.from("vu_reunions_count").select("reunions").maybeSingle();
+  return ((data?.reunions as number | undefined) ?? 0) || 0;
 }
 
 export async function getHelpListings(): Promise<HelpListing[]> {
