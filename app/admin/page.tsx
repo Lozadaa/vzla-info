@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { Notice } from "../components/Notice";
 import { LoginForm } from "./LoginForm";
 import { Moderation, QueueItem } from "./Moderation";
 import { MatchPanel, MatchItem } from "./MatchPanel";
+import { ExportPanel } from "./ExportPanel";
+import { MuroReviewCard } from "./MuroReviewCard";
 import { createClient } from "@/lib/supabase/server";
+import { getMuroPending } from "@/lib/data";
 import { categoryLabel } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -62,33 +64,28 @@ export default async function Page() {
     );
   }
 
-  // Cargar pendientes (todos) y publicados (solo si es admin, para borrar)
+  // Cargar pendientes (todos), publicados (solo admin), coincidencias y muro.
   const isAdmin = profile.role === "admin";
-  const [items, published, matches] = await Promise.all([
+  const [items, published, matches, muroPending] = await Promise.all([
     loadQueue(supabase),
     isAdmin ? loadPublished(supabase) : Promise.resolve([] as QueueItem[]),
     loadMatches(supabase),
+    getMuroPending(),
   ]);
 
   return (
     <Shell>
       <div className="flex flex-col gap-5">
-        <Link
-          href="/muro/revisar"
-          className="card flex items-center justify-between gap-4 p-4"
-          style={{ borderLeft: "4px solid var(--color-alert)" }}
-        >
-          <span className="min-w-0">
-            <span className="block font-semibold text-lg">Revisar muro de emergencia</span>
-            <span className="block text-sm text-[var(--color-ink-soft)]">
-              Aprobar, rechazar o eliminar los tweets recopilados de redes.
-            </span>
-          </span>
-          <span aria-hidden="true" className="shrink-0 text-[var(--color-ink-faint)]">→</span>
-        </Link>
+        {/* 1 · Descargar (export CSV) — arriba del todo, solo admin */}
+        {isAdmin && <ExportPanel />}
 
+        {/* 2 · Posibles duplicados / reencuentros */}
         <MatchPanel matches={matches} />
 
+        {/* 3 · Revisar muro de emergencia, con preview paginado */}
+        <MuroReviewCard pending={muroPending} />
+
+        {/* 4 · Cola de moderación (pendientes + publicados), paginada */}
         <Moderation
           items={items}
           published={published}
@@ -132,7 +129,10 @@ async function loadMatches(supabase: DB): Promise<MatchItem[]> {
   }
 
   const [{ data: missing }, { data: safes }] = await Promise.all([
-    supabase.from("missing_persons").select("id, full_name, last_seen_zone, photo_url").in("id", [...missingIds]),
+    supabase
+      .from("missing_persons")
+      .select("id, full_name, age, last_seen_zone, last_seen_at, description, photo_url, contact_whatsapp")
+      .in("id", [...missingIds]),
     safeIds.size
       ? supabase.from("safe_reports").select("id, full_name, zone").in("id", [...safeIds])
       : Promise.resolve({ data: [] as { id: string; full_name: string; zone: string }[] }),
@@ -159,7 +159,9 @@ async function loadMatches(supabase: DB): Promise<MatchItem[]> {
       out.push({
         id: p.id, kind: "duplicado", score: p.score,
         missing_id: m.id, missing_name: m.full_name, missing_zone: m.last_seen_zone, missing_photo: m.photo_url,
-        other_id: o.id, other_name: o.full_name, other_zone: o.last_seen_zone,
+        missing_age: m.age, missing_date: m.last_seen_at, missing_desc: m.description, missing_contact: m.contact_whatsapp,
+        other_id: o.id, other_name: o.full_name, other_zone: o.last_seen_zone, other_photo: o.photo_url,
+        other_age: o.age, other_date: o.last_seen_at, other_desc: o.description, other_contact: o.contact_whatsapp,
       });
     }
   }

@@ -6,20 +6,31 @@ import { MissingCard } from "./components/MissingCard";
 import { MuroPreview } from "./components/MuroPreview";
 import { AyudaPreview } from "./components/AyudaPreview";
 import { SismosPreview } from "./components/SismosPreview";
+import { HomeStats } from "./components/HomeStats";
 import { Phone, AlertTriangle } from "./components/icons";
 import { ACTIONS } from "@/lib/types";
 import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
-import { getMissingPersons, getReunionsCount, getSituationMap } from "@/lib/data";
+import {
+  getMissingPersons,
+  getReunionsCount,
+  getSituationMap,
+  getHelpListings,
+} from "@/lib/data";
 import { MapView } from "./mapa/MapView";
 
-const nf = new Intl.NumberFormat("es-VE");
-
 export default async function Home() {
-  const [missing, reunions, situation] = await Promise.all([
+  const [missing, reunions, situation, help] = await Promise.all([
     getMissingPersons(6),
     getReunionsCount(),
     getSituationMap(),
+    getHelpListings(),
   ]);
+
+  const stats = [
+    { n: situation.total, label: "personas buscadas", color: "var(--color-busco)" },
+    { n: reunions, label: "reportadas como localizadas", color: "var(--color-salvo)" },
+    { n: help.length, label: "avisos de ayuda", color: "var(--color-ayuda)" },
+  ];
 
   return (
     <>
@@ -33,31 +44,16 @@ export default async function Home() {
           </h1>
           <p className="mt-4 text-[1.05rem] text-[var(--color-ink-soft)] max-w-2xl">
             Herramienta comunitaria para reconectar con familiares y localizar
-            recursos después de una emergencia. Cada reporte es verificado por un
-            moderador antes de publicarse. No reemplaza a los servicios oficiales
-            de emergencia.
+            recursos después de una emergencia. Cada reporte se verifica antes de
+            publicarse. No reemplaza a los servicios oficiales de emergencia.
           </p>
-
-          {reunions > 0 && (
-            <p
-              className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
-              style={{ background: "var(--color-salvo-soft)", color: "var(--color-salvo)" }}
-              title="Personas marcadas como “localizado” por la fuente externa de desaparecidos."
-            >
-              <span
-                aria-hidden="true"
-                className="inline-block h-2 w-2 rounded-full"
-                style={{ background: "var(--color-salvo)" }}
-              />
-              {reunions === 1
-                ? "1 persona reportada como localizada"
-                : `${reunions} personas reportadas como localizadas`}
-            </p>
-          )}
         </section>
 
+        {/* Estadísticas — cifras consolidadas, antes dispersas por el inicio */}
+        <HomeStats stats={stats} />
+
         {/* Las 4 acciones — primer bloque interactivo del inicio */}
-        <section className="shell" aria-label="Acciones">
+        <section className="shell mt-8" aria-label="Acciones">
           <div className="mb-2.5 flex items-baseline justify-between gap-3">
             <h2 className="eyebrow">Elige una opción</h2>
             <span className="tap-hint">Toca una opción</span>
@@ -125,10 +121,9 @@ export default async function Home() {
             >
               <MapView clusters={situation.clusters} />
             </div>
-            <p className="-mt-1 mt-2 text-xs text-[var(--color-ink-faint)]">
-              {nf.format(situation.total)} personas buscadas, agrupadas por la última
-              zona donde fueron vistas. El círculo más grande, más personas. Toca uno
-              para ver el detalle.
+            <p className="mt-2 text-xs text-[var(--color-ink-faint)]">
+              Agrupadas por la última zona donde fueron vistas. El círculo más
+              grande, más personas. Toca uno para ver el detalle.
             </p>
           </section>
         )}
@@ -144,45 +139,60 @@ export default async function Home() {
         {/* Actividad sísmica — réplicas e historial (USGS), en vivo */}
         <SismosPreview />
 
-        {/* Contexto — por qué existe la plataforma ahora */}
+        {/* Contexto — por qué existe la plataforma ahora (colapsable) */}
         <section className="shell mt-9 mb-4">
-          <div className="card p-5" style={{ borderLeft: "4px solid var(--color-alert)" }}>
-            <p className="eyebrow" style={{ color: "var(--color-alert)" }}>
-              Contexto · 24 de junio de 2026
-            </p>
-            <h2 className="mt-1.5 text-lg font-bold">Terremotos de Yaracuy</h2>
-            <p className="mt-2 text-[0.97rem] text-[var(--color-ink-soft)]">
-              El 24 de junio de 2026, dos sismos sucesivos de magnitud 7,2 y 7,5
-              sacudieron el occidente de Venezuela, con epicentro en Yaracuy
-              (cerca de San Felipe y Yumare). Hubo derrumbes y daños en Caracas,
-              La Guaira, Valencia, Maracay y otros estados, y afectación del
-              aeropuerto de Maiquetía. Esta plataforma reúne reportes ciudadanos
-              para reencontrar familiares y coordinar ayuda.
-            </p>
-            <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              <div>
-                <dt className="folio">Magnitud</dt>
-                <dd className="font-bold tabular-nums">7,2 y 7,5 Mw</dd>
+          <details
+            className="group card p-0 overflow-hidden"
+            style={{ borderLeft: "4px solid var(--color-alert)" }}
+          >
+            <summary className="cursor-pointer select-none list-none p-5 [&::-webkit-details-marker]:hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="eyebrow" style={{ color: "var(--color-alert)" }}>
+                    Contexto · 24 de junio de 2026
+                  </p>
+                  <h2 className="mt-1.5 text-lg font-bold">Terremotos de Yaracuy</h2>
+                </div>
+                <span className="tap-hint mt-1 shrink-0">
+                  <span className="group-open:hidden">Ver detalle</span>
+                  <span className="hidden group-open:inline">Ocultar</span>
+                </span>
               </div>
-              <div>
-                <dt className="folio">Fallecidos</dt>
-                <dd className="font-bold tabular-nums">32+</dd>
-              </div>
-              <div>
-                <dt className="folio">Heridos</dt>
-                <dd className="font-bold tabular-nums">700+</dd>
-              </div>
-              <div>
-                <dt className="folio">Intensidad</dt>
-                <dd className="font-bold">IX Mercalli</dd>
-              </div>
-            </dl>
-            <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
-              Cifras preliminares; pueden variar conforme avancen las labores de
-              rescate. Si tu vida corre peligro, llama al 911 antes de usar esta
-              herramienta.
-            </p>
-          </div>
+              <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div>
+                  <dt className="folio">Magnitud</dt>
+                  <dd className="font-bold tabular-nums">7,2 y 7,5 Mw</dd>
+                </div>
+                <div>
+                  <dt className="folio">Fallecidos</dt>
+                  <dd className="font-bold tabular-nums">32+</dd>
+                </div>
+                <div>
+                  <dt className="folio">Heridos</dt>
+                  <dd className="font-bold tabular-nums">700+</dd>
+                </div>
+                <div>
+                  <dt className="folio">Intensidad</dt>
+                  <dd className="font-bold">IX Mercalli</dd>
+                </div>
+              </dl>
+            </summary>
+            <div className="px-5 pb-5">
+              <p className="text-[0.97rem] text-[var(--color-ink-soft)]">
+                El 24 de junio de 2026, dos sismos sucesivos de magnitud 7,2 y 7,5
+                sacudieron el occidente de Venezuela, con epicentro en Yaracuy
+                (cerca de San Felipe y Yumare). Hubo derrumbes y daños en Caracas,
+                La Guaira, Valencia, Maracay y otros estados, y afectación del
+                aeropuerto de Maiquetía. Esta plataforma reúne reportes ciudadanos
+                para reencontrar familiares y coordinar ayuda.
+              </p>
+              <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
+                Cifras preliminares; pueden variar conforme avancen las labores de
+                rescate. Si tu vida corre peligro, llama al 911 antes de usar esta
+                herramienta.
+              </p>
+            </div>
+          </details>
         </section>
 
         {/* Llamada rápida — acceso directo a los servicios de auxilio */}
