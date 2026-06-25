@@ -3,6 +3,7 @@ import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
 import { EmergencyButton } from "./components/EmergencyButton";
 import { EmergencyBar } from "./components/EmergencyBar";
+import { PageViews } from "./components/PageViews";
 import "./globals.css";
 
 // Public Sans — la tipografía del US Web Design System: neutra, legible bajo
@@ -68,6 +69,7 @@ export default function RootLayout({
         {children}
         <EmergencyButton />
         <ServiceWorker />
+        <PageViews />
       </body>
     </html>
   );
