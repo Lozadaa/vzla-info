@@ -80,26 +80,28 @@ export default async function Page() {
                   <Box size={15} aria-hidden="true" />
                   {city} · {list.length}
                 </h2>
-                <ul className="grid gap-3 sm:grid-cols-2">
+                <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {list.map((a, i) => (
-                    <li key={`${city}-${i}`} className="card p-4 flex flex-col gap-1.5" style={{ borderLeft: "5px solid var(--color-ayuda)" }}>
-                      <h3 className="font-bold leading-tight">{a.who || "Centro de acopio"}</h3>
+                    <li key={`${city}-${i}`} className="card min-w-0 p-4 flex flex-col gap-1.5" style={{ borderLeft: "5px solid var(--color-ayuda)" }}>
+                      <h3 className="font-bold leading-tight break-words">{a.who || "Centro de acopio"}</h3>
                       {a.address && (
-                        <p className="flex items-start gap-1.5 text-sm text-[var(--color-ink-soft)]">
+                        <p className="flex min-w-0 items-start gap-1.5 text-sm text-[var(--color-ink-soft)]">
                           <MapPin size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--color-ink-faint)]" />
-                          <span>{a.address}</span>
+                          <span className="min-w-0 break-words">{a.address}</span>
                         </p>
                       )}
                       {a.receives && a.receives.toLowerCase() !== "venezuela" && (
-                        <p className="text-sm">
+                        <p className="text-sm break-words">
                           <span className="font-semibold">Reciben:</span> {a.receives}
                         </p>
                       )}
                       <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                         {a.contact && (
-                          <span className="flex items-center gap-1.5">
-                            <span className="text-[var(--color-ink-faint)]">Contacto:</span>
-                            <Contact value={a.contact} />
+                          <span className="flex min-w-0 items-center gap-1.5">
+                            <span className="shrink-0 text-[var(--color-ink-faint)]">Contacto:</span>
+                            <span className="min-w-0 break-words">
+                              <Contact value={a.contact} />
+                            </span>
                           </span>
                         )}
                         {a.lat != null && a.lng != null && (
