@@ -5,6 +5,7 @@ import { ActionCard } from "./components/ActionCard";
 import { MissingCard } from "./components/MissingCard";
 import { MuroPreview } from "./components/MuroPreview";
 import { AyudaPreview } from "./components/AyudaPreview";
+import { AcopiosPreview } from "./components/AcopiosPreview";
 import { SismosPreview } from "./components/SismosPreview";
 import { HomeStats } from "./components/HomeStats";
 import { Phone, AlertTriangle } from "./components/icons";
@@ -135,6 +136,9 @@ export default async function Home() {
 
         {/* Ayuda — banner + miniaturas (preview) de necesito / ofrezco */}
         <AyudaPreview />
+
+        {/* Centros de acopio — dónde donar */}
+        <AcopiosPreview />
 
         {/* Actividad sísmica — réplicas e historial (USGS), en vivo */}
         <SismosPreview />

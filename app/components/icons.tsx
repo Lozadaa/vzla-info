@@ -136,6 +136,14 @@ export const Plus = (p: IconProps) => (
   </Svg>
 );
 
+// Caja de donación — centros de acopio.
+export const Box = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M21 8 12 3 3 8v8l9 5 9-5V8Z" />
+    <path d="M3 8l9 5 9-5M12 13v8" />
+  </Svg>
+);
+
 /* ---- Categorías de ayuda ---- */
 
 const Home = (p: IconProps) => (

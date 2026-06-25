@@ -55,6 +55,12 @@ export function SiteHeader({ back }: { back?: { href: string; label: string } })
           >
             Ayuda
           </Link>
+          <Link
+            href="/acopios"
+            className="hidden sm:inline px-3 py-2 font-semibold rounded-md hover:bg-[var(--color-paper-sunk)]"
+          >
+            Acopios
+          </Link>
         </nav>
       </div>
     </header>
