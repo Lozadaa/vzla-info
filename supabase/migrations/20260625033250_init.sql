@@ -160,6 +160,17 @@ create policy "moderators update mods" on public.modification_requests
   for update using (public.is_moderator()) with check (public.is_moderator());
 
 -- ============================================================
+-- Privilegios de tabla (GRANT). RLS controla las FILAS; GRANT controla
+-- el acceso a la TABLA. Ambos son necesarios: sin GRANT, el rol anon
+-- recibe "permission denied for table ...".
+-- ============================================================
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to anon, authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
+alter default privileges in schema public
+  grant select, insert, update, delete on tables to anon, authenticated;
+
+-- ============================================================
 -- Storage: bucket público de fotos (lectura pública, inserción anónima)
 -- ============================================================
 insert into storage.buckets (id, name, public)
