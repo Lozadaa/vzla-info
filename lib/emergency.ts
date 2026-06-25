@@ -30,6 +30,21 @@ export const EMERGENCY_PRIMARY = {
     "Número nacional de emergencias. Integra policía, bomberos y ambulancias. Gratuito y funciona desde cualquier teléfono.",
 };
 
+/** Selección curada para la "llamada rápida" del inicio: los servicios más
+ * usados, además del 911. Subconjunto de EMERGENCY_GROUPS (misma fuente). */
+export interface QuickDial {
+  name: string;
+  label: string;
+  tel: string;
+}
+export const EMERGENCY_QUICK: QuickDial[] = [
+  { name: "Emergencias (CANTV)", label: "171", tel: "171" },
+  { name: "Protección Civil", label: "0800-558-8427", tel: "08005588427" },
+  { name: "Cruz Roja", label: "(0212) 578.25.16", tel: "02125782516" },
+  { name: "Bomberos (Metrop.)", label: "(0212) 545.45.45", tel: "02125454545" },
+  { name: "CICPC (denuncias)", label: "0800-242-7200", tel: "08002427200" },
+];
+
 export const EMERGENCY_GROUPS: EmergencyGroup[] = [
   {
     emoji: "📡",
