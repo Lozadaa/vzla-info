@@ -36,7 +36,7 @@ export default async function Page() {
           <div className="grid grid-cols-3 gap-3">
             {[
               { n: total, label: "personas buscadas", color: "var(--color-busco)" },
-              { n: located, label: "ubicadas en el mapa", color: "var(--color-ink)" },
+              { n: located, label: "mostradas en el mapa", color: "var(--color-ink)" },
               { n: clusters.length, label: "zonas con reportes", color: "var(--color-ayuda)" },
             ].map((s) => (
               <div key={s.label} className="card p-4 text-center">

@@ -7,12 +7,16 @@ import { MuroPreview } from "./components/MuroPreview";
 import { Phone, AlertTriangle } from "./components/icons";
 import { ACTIONS } from "@/lib/types";
 import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
-import { getMissingPersons, getReunionsCount } from "@/lib/data";
+import { getMissingPersons, getReunionsCount, getSituationMap } from "@/lib/data";
+import { MapView } from "./mapa/MapView";
+
+const nf = new Intl.NumberFormat("es-VE");
 
 export default async function Home() {
-  const [missing, reunions] = await Promise.all([
+  const [missing, reunions, situation] = await Promise.all([
     getMissingPersons(6),
     getReunionsCount(),
+    getSituationMap(),
   ]);
 
   return (
@@ -36,13 +40,16 @@ export default async function Home() {
             <p
               className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
               style={{ background: "var(--color-salvo-soft)", color: "var(--color-salvo)" }}
+              title="Personas marcadas como “localizado” por la fuente externa de desaparecidos."
             >
               <span
                 aria-hidden="true"
                 className="inline-block h-2 w-2 rounded-full"
                 style={{ background: "var(--color-salvo)" }}
               />
-              {reunions} {reunions === 1 ? "familia reconectada" : "familias reconectadas"} hasta ahora
+              {reunions === 1
+                ? "1 persona reportada como localizada"
+                : `${reunions} personas reportadas como localizadas`}
             </p>
           )}
         </section>
@@ -136,6 +143,29 @@ export default async function Home() {
             </div>
           )}
         </section>
+
+        {/* Mapa de situación — dónde se busca a más personas */}
+        {situation.clusters.length > 0 && (
+          <section className="shell mt-9" aria-label="Mapa de situación">
+            <div className="mb-3 flex items-end justify-between gap-3">
+              <h2 className="text-lg font-bold">Mapa de situación</h2>
+              <Link href="/mapa" className="text-sm font-semibold underline underline-offset-2">
+                Ver mapa completo →
+              </Link>
+            </div>
+            <div
+              className="overflow-hidden rounded-2xl border"
+              style={{ borderColor: "var(--color-line-strong)", height: 320 }}
+            >
+              <MapView clusters={situation.clusters} />
+            </div>
+            <p className="-mt-1 mt-2 text-xs text-[var(--color-ink-faint)]">
+              {nf.format(situation.total)} personas buscadas, agrupadas por la última
+              zona donde fueron vistas. El círculo más grande, más personas. Toca uno
+              para ver el detalle.
+            </p>
+          </section>
+        )}
 
         {/* Llamada rápida — acceso directo a los servicios de auxilio */}
         <section className="shell mt-9" aria-label="Llamada rápida de emergencia">
