@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
 import { EmergencyButton } from "./components/EmergencyButton";
 import { EmergencyBar } from "./components/EmergencyBar";
 import "./globals.css";
+
+const GTM_ID = "GTM-P2CGSGWX";
 
 // Public Sans — la tipografía del US Web Design System: neutra, legible bajo
 // presión y oficial. Una sola familia (display + cuerpo) para minimizar el
@@ -61,6 +64,24 @@ export default function RootLayout({
           ColorZilla → cz-shortcut-listen) inyectan atributos en <body> antes de
           que React hidrate, lo que dispara un falso aviso de hidratación. */}
       <body suppressHydrationWarning>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* Google Tag Manager */}
+        <Script id="gtm" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`}
+        </Script>
+
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>
