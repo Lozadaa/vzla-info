@@ -41,6 +41,12 @@ export async function MuroPreview() {
               Reportes recopilados de redes sobre personas desaparecidas y
               necesidades urgentes, revisados por moderadores.
             </span>
+            <span
+              className="tap-hint mt-1.5 flex sm:hidden"
+              style={{ color: "var(--color-alert)" }}
+            >
+              Toca para abrir el muro
+            </span>
           </span>
           <span
             className="hidden sm:inline shrink-0 text-sm font-semibold"

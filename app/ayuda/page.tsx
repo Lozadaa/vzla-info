@@ -36,8 +36,14 @@ export default async function Page() {
             </span>
             <span>
               <span className="block font-extrabold text-lg">Publicar ayuda</span>
-              <span className="text-sm text-[var(--color-ink-soft)]">
+              <span className="block text-sm text-[var(--color-ink-soft)]">
                 Indica si necesitas u ofreces algo, y en qué zona.
+              </span>
+              <span
+                className="tap-hint mt-1.5 flex"
+                style={{ color: "var(--color-ayuda)" }}
+              >
+                Toca para publicar
               </span>
             </span>
           </Link>

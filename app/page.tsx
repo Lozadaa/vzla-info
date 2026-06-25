@@ -4,6 +4,8 @@ import { SiteFooter } from "./components/SiteFooter";
 import { ActionCard } from "./components/ActionCard";
 import { MissingCard } from "./components/MissingCard";
 import { MuroPreview } from "./components/MuroPreview";
+import { AyudaPreview } from "./components/AyudaPreview";
+import { SismosPreview } from "./components/SismosPreview";
 import { Phone, AlertTriangle } from "./components/icons";
 import { ACTIONS } from "@/lib/types";
 import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
@@ -30,8 +32,73 @@ export default async function Home() {
           </p>
         </section>
 
+        {/* Las 4 acciones — primer bloque interactivo del inicio */}
+        <section className="shell" aria-label="Acciones">
+          <div className="mb-2.5 flex items-baseline justify-between gap-3">
+            <h2 className="eyebrow">Elige una opción</h2>
+            <span className="tap-hint">Toca una opción</span>
+          </div>
+          <div className="grid gap-2.5 sm:grid-cols-2">
+
+            {[...ACTIONS].sort((a, b) =>
+              a.key === "busco" ? -1 : b.key === "busco" ? 1 : 0,
+            ).map((a) => (
+              <ActionCard key={a.key} action={a} featured={a.key === "busco"} />
+            ))}
+          </div>
+        </section>
+
+        {/* Personas buscadas — visibles directamente en el inicio */}
+        <section className="shell mt-9" aria-label="Personas buscadas">
+          <div className="mb-1.5 flex items-end justify-between gap-3">
+            <h2 className="text-lg font-bold" style={{ color: "var(--color-busco)" }}>
+              Personas buscadas
+            </h2>
+            <Link
+              href="/busco"
+              className="text-sm font-semibold underline underline-offset-2"
+            >
+              Ver todas →
+            </Link>
+          </div>
+          {missing.length > 0 && (
+            <p className="tap-hint mb-3">Toca una ficha para ver el detalle</p>
+          )}
+
+          {missing.length === 0 ? (
+            <p className="card p-5 text-sm text-[var(--color-ink-soft)]">
+              Aún no hay personas reportadas públicamente.{" "}
+              <Link
+                href="/busco/nuevo"
+                className="font-semibold underline underline-offset-2"
+                style={{ color: "var(--color-busco)" }}
+              >
+                Reportar a alguien
+              </Link>
+              .
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {missing.slice(0, 6).map((p) => (
+                <MissingCard key={p.id} person={p} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Muro de emergencia — banner + miniaturas (preview) */}
+        <div className="mt-9">
+          <MuroPreview />
+        </div>
+
+        {/* Ayuda — banner + miniaturas (preview) de necesito / ofrezco */}
+        <AyudaPreview />
+
+        {/* Actividad sísmica — réplicas e historial (USGS), en vivo */}
+        <SismosPreview />
+
         {/* Contexto — por qué existe la plataforma ahora */}
-        <section className="shell mb-4">
+        <section className="shell mt-9 mb-4">
           <div className="card p-5" style={{ borderLeft: "4px solid var(--color-alert)" }}>
             <p className="eyebrow" style={{ color: "var(--color-alert)" }}>
               Contexto · 24 de junio de 2026
@@ -71,55 +138,6 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Muro de emergencia — banner + miniaturas (preview) */}
-        <MuroPreview />
-
-        {/* Las 4 acciones — elemento dominante de la página */}
-        <section className="shell" aria-label="Acciones">
-          <h2 className="eyebrow mb-3">Elige una opción</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-
-            {ACTIONS.map((a) => (
-              <ActionCard key={a.key} action={a} />
-            ))}
-          </div>
-        </section>
-
-        {/* Personas buscadas — visibles directamente en el inicio */}
-        <section className="shell mt-9" aria-label="Personas buscadas">
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <h2 className="text-lg font-bold" style={{ color: "var(--color-busco)" }}>
-              Personas buscadas
-            </h2>
-            <Link
-              href="/busco"
-              className="text-sm font-semibold underline underline-offset-2"
-            >
-              Ver todas →
-            </Link>
-          </div>
-
-          {missing.length === 0 ? (
-            <p className="card p-5 text-sm text-[var(--color-ink-soft)]">
-              Aún no hay personas reportadas públicamente.{" "}
-              <Link
-                href="/busco/nuevo"
-                className="font-semibold underline underline-offset-2"
-                style={{ color: "var(--color-busco)" }}
-              >
-                Reportar a alguien
-              </Link>
-              .
-            </p>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {missing.slice(0, 6).map((p) => (
-                <MissingCard key={p.id} person={p} />
-              ))}
-            </div>
-          )}
-        </section>
-
         {/* Llamada rápida — acceso directo a los servicios de auxilio */}
         <section className="shell mt-9" aria-label="Llamada rápida de emergencia">
           <div
@@ -131,7 +149,9 @@ export default async function Home() {
                 <AlertTriangle size={20} aria-hidden="true" style={{ color: "var(--color-alert)" }} />
                 Llamada rápida
               </h2>
-              <span className="eyebrow">Toca para llamar</span>
+              <span className="tap-hint" style={{ color: "var(--color-alert)" }}>
+                Toca para llamar
+              </span>
             </div>
 
             {/* 911 destacado */}

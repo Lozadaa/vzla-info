@@ -200,6 +200,26 @@
     color: var(--color-ink-soft);
   }
 
+  /* Leyenda discreta de "se puede tocar/entrar". Pequeña y elegante;
+     la flecha se desliza al pasar/tocar para invitar a la acción. */
+  .tap-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+  }
+  .tap-hint::after {
+    content: "→";
+    transition: transform 0.18s ease;
+  }
+  .group:hover .tap-hint::after {
+    transform: translateX(2px);
+  }
+
   /* Tarjeta base */
   .card {
     background: var(--color-card);
@@ -371,6 +391,38 @@
   @keyframes emergency-ping {
     0% { transform: scale(1); opacity: 0.7; }
     70%, 100% { transform: scale(1.45); opacity: 0; }
+  }
+
+  /* Acción destacada — halo pulsante que llama la atención sin tapar nada.
+     El color lo aporta la propia tarjeta vía la variable --featured. */
+  .action-featured {
+    animation: action-glow 1.5s ease-in-out infinite;
+  }
+  @keyframes action-glow {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--featured) 55%, transparent);
+    }
+    70%, 100% {
+      box-shadow: 0 0 0 9px color-mix(in srgb, var(--featured) 0%, transparent);
+    }
+  }
+
+  /* Chip "Empieza aquí" — late suavemente para reforzar la prioridad */
+  .action-flag {
+    flex-shrink: 0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    animation: action-flag-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes action-flag-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.92; }
+    50% { transform: scale(1.06); opacity: 1; }
   }
 
   /* Capa oscura + anclaje del panel abajo (móvil) / centro (desktop) */

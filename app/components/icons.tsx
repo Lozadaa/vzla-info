@@ -78,6 +78,13 @@ export const ArrowRight = (p: IconProps) => (
   </Svg>
 );
 
+// Sismograma — onda de actividad sísmica.
+export const Activity = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M2 12h3l2.5-7 4 16 3-11 1.8 4H22" />
+  </Svg>
+);
+
 export const Download = (p: IconProps) => (
   <Svg {...p}>
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
