@@ -17,10 +17,19 @@ create index if not exists page_views_visitor_idx on public.page_views (visitor_
 
 alter table public.page_views enable row level security;
 
--- ¿El usuario actual es super-admin? Comprueba el correo VERIFICADO en
--- auth.users (no el de profiles, que se inserta a mano y podría falsearse).
--- security definer para poder leer auth.users. La lista debe coincidir con la
--- constante SUPER_ADMINS del servidor (app/admin/page.tsx).
+-- Lista de dueños (super-admins). Vive SOLO en la base de datos, nunca en el
+-- código del repo (que es público). Se gestiona con service_role / SQL Editor.
+-- Sin políticas RLS ni grants: el público no la ve; is_superadmin() la lee vía
+-- security definer (dueño postgres → ignora RLS). Los correos se insertan a
+-- mano en cada entorno (no se commitean).
+create table if not exists public.super_admins (
+  email text primary key,
+  created_at timestamptz not null default now()
+);
+alter table public.super_admins enable row level security;
+
+-- ¿El usuario actual es super-admin? Cruza su correo VERIFICADO de auth.users
+-- (no el de profiles, que se inserta a mano) contra la tabla super_admins.
 create or replace function public.is_superadmin()
 returns boolean
 language sql
@@ -29,9 +38,10 @@ security definer
 set search_path = public
 as $$
   select exists (
-    select 1 from auth.users
-    where id = auth.uid()
-      and lower(email) in ('rubendsemprunc@gmail.com', 'rlozada808@gmail.com')
+    select 1
+    from auth.users u
+    join public.super_admins s on lower(u.email) = lower(s.email)
+    where u.id = auth.uid()
   );
 $$;
 
