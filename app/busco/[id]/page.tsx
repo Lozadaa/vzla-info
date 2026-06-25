@@ -5,6 +5,7 @@ import { SiteHeader } from "../../components/SiteHeader";
 import { SiteFooter } from "../../components/SiteFooter";
 import { MissingActions } from "./MissingActions";
 import { ModificationRequest } from "./ModificationRequest";
+import { User } from "../../components/icons";
 import { getMissingPerson } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 
@@ -49,8 +50,8 @@ export default async function Page({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={person.photo_url} alt={`Foto de ${person.full_name}`} className="h-full w-full object-cover" />
               ) : (
-                <span className="flex h-full w-full items-center justify-center text-5xl text-[var(--color-ink-faint)]" aria-hidden="true">
-                  👤
+                <span className="flex h-full w-full items-center justify-center text-[var(--color-ink-faint)]" aria-hidden="true">
+                  <User size={64} />
                 </span>
               )}
             </div>

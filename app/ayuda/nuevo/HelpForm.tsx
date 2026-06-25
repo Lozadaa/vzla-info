@@ -5,6 +5,7 @@ import { submitReport } from "@/lib/submit";
 import { HELP_CATEGORIES, HelpKind } from "@/lib/types";
 import { SubmittedCard } from "../../components/SubmittedCard";
 import { Notice } from "../../components/Notice";
+import { MapPin, Check } from "../../components/icons";
 
 export function HelpForm() {
   const [kind, setKind] = useState<HelpKind>("need");
@@ -99,7 +100,7 @@ export function HelpForm() {
         <select id="category" name="category" className="select" defaultValue="refugio">
           {HELP_CATEGORIES.map((c) => (
             <option key={c.slug} value={c.slug}>
-              {c.emoji} {c.label}
+              {c.label}
             </option>
           ))}
         </select>
@@ -122,11 +123,13 @@ export function HelpForm() {
         <input id="zone" name="zone" required className="input" placeholder="Ej.: San Cristóbal, Táchira" />
         <div className="mt-2 flex items-center gap-3">
           <button type="button" onClick={useMyLocation} className="btn btn-ghost !min-h-[44px] text-sm">
-            {locating ? "Ubicando…" : "📍 Usar mi ubicación"}
+            <MapPin size={16} aria-hidden="true" />
+            {locating ? "Ubicando…" : "Usar mi ubicación"}
           </button>
           {coords && (
-            <span className="text-sm text-[var(--color-ok)]">
-              Ubicación añadida ✓
+            <span className="inline-flex items-center gap-1 text-sm text-[var(--color-ok)]">
+              <Check size={16} aria-hidden="true" />
+              Ubicación añadida
             </span>
           )}
         </div>

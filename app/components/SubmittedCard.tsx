@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Check } from "./icons";
 
 /** Confirmación tras enviar un reporte: folio + próximos pasos. */
 export function SubmittedCard({
@@ -17,11 +18,11 @@ export function SubmittedCard({
   return (
     <div className="card p-6 text-center" role="status">
       <div
-        className="mx-auto flex h-14 w-14 items-center justify-center rounded-full text-2xl"
+        className="mx-auto flex h-14 w-14 items-center justify-center rounded-full"
         style={{ background: "var(--color-salvo-soft)", color: accent }}
         aria-hidden="true"
       >
-        ✓
+        <Check size={30} />
       </div>
       <h2 className="mt-4 text-2xl font-extrabold">{title}</h2>
       <p className="mt-2 text-[var(--color-ink-soft)]">

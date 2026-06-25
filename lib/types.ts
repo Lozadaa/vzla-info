@@ -58,30 +58,26 @@ export const ACTIONS: ActionMeta[] = [
   },
 ];
 
-// Categorías de ayuda — abiertas y extensibles.
+// Categorías de ayuda — abiertas y extensibles. El ícono se resuelve por
+// slug en <CategoryIcon> (SVG), no se guarda emoji.
 export interface HelpCategory {
   slug: string;
   label: string;
-  emoji: string;
 }
 
 export const HELP_CATEGORIES: HelpCategory[] = [
-  { slug: "refugio", label: "Refugio / alojamiento", emoji: "🏠" },
-  { slug: "comida", label: "Comida y agua", emoji: "🍲" },
-  { slug: "medico", label: "Médico / medicinas", emoji: "➕" },
-  { slug: "transporte", label: "Transporte", emoji: "🚐" },
-  { slug: "legal", label: "Ayuda legal", emoji: "⚖️" },
-  { slug: "psicologico", label: "Apoyo psicológico", emoji: "💬" },
-  { slug: "ropa", label: "Ropa y abrigo", emoji: "🧥" },
-  { slug: "otros", label: "Otros", emoji: "✨" },
+  { slug: "refugio", label: "Refugio / alojamiento" },
+  { slug: "comida", label: "Comida y agua" },
+  { slug: "medico", label: "Médico / medicinas" },
+  { slug: "transporte", label: "Transporte" },
+  { slug: "legal", label: "Ayuda legal" },
+  { slug: "psicologico", label: "Apoyo psicológico" },
+  { slug: "ropa", label: "Ropa y abrigo" },
+  { slug: "otros", label: "Otros" },
 ];
 
 export function categoryLabel(slug: string): string {
   return HELP_CATEGORIES.find((c) => c.slug === slug)?.label ?? "Otros";
-}
-
-export function categoryEmoji(slug: string): string {
-  return HELP_CATEGORIES.find((c) => c.slug === slug)?.emoji ?? "✨";
 }
 
 // ---- Filas de base de datos ----

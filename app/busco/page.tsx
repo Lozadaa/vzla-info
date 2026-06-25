@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { PageIntro } from "../components/PageIntro";
+import { Plus } from "../components/icons";
 import { MissingList } from "./MissingList";
 import { getMissingPersons } from "@/lib/data";
 
@@ -32,11 +33,11 @@ export default async function Page() {
             style={{ borderLeft: "6px solid var(--color-busco)" }}
           >
             <span
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl font-bold"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
               style={{ background: "var(--color-busco-soft)", color: "var(--color-busco)" }}
               aria-hidden="true"
             >
-              +
+              <Plus size={22} />
             </span>
             <span>
               <span className="block font-extrabold text-lg">Reportar a una persona</span>

@@ -1,58 +1,70 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Venezuela Unida — sistema de respuesta a emergencias
-   Registro: sobrio, institucional, claro bajo estrés.
-   Superficies neutras frías, tinta pizarra, color SOLO funcional
-   (no decorativo). Alto contraste, accesible (WCAG AA), móvil primero.
+   Vzla Info — sistema de respuesta a emergencias
+   Dirección: "Civic Signal" — servicio público serio, claro bajo
+   estrés, carga rápida. Superficie blanca (documento oficial), tinta
+   casi negra, color SOLO funcional (codifica categoría/estado, nunca
+   decora). Foco amarillo de alta visibilidad (patrón gov.uk). Acento
+   tricolor nacional sutil. WCAG AA, móvil primero.
    ============================================================ */
 
 @theme {
-  /* Superficies (neutro frío, institucional) */
-  --color-paper: #eceef1;
-  --color-paper-sunk: #e0e4e9;
+  /* Superficies — blanco institucional, grises fríos para hundidos */
+  --color-paper: #ffffff;
+  --color-paper-sunk: #f3f5f7;
   --color-card: #ffffff;
-  --color-line: #d7dce2;
-  --color-line-strong: #bfc6cf;
+  --color-line: #d3d9e0;
+  --color-line-strong: #aeb8c4;
 
-  /* Tinta / texto (pizarra casi negra) */
-  --color-ink: #14181d;
-  --color-ink-soft: #535d6a;
-  --color-ink-faint: #828b96;
+  /* Tinta / texto (pizarra casi negra) — todas AA sobre blanco */
+  --color-ink: #11161c;
+  --color-ink-soft: #515b68;       /* ~6.4:1 */
+  --color-ink-faint: #717b88;      /* ~4.6:1 */
 
-  /* Cromo institucional (grave) */
-  --color-azul: #1b2a3a;
-  --color-azul-ink: #111a25;
+  /* Cromo institucional (azul grave, oficial) */
+  --color-azul: #0b2c54;
+  --color-azul-ink: #061d3a;
+
+  /* Foco — amarillo de seguridad, máxima visibilidad (gov.uk) */
+  --color-focus: #ffdd00;
 
   /* Ámbar SOLO para "pendiente" y advertencias (uso mínimo) */
-  --color-oro: #b5680e;
-  --color-oro-deep: #8a4e0a;
+  --color-oro: #9a6a00;
+  --color-oro-deep: #7c5500;
+  --color-oro-soft: #fbf0d4;
 
-  /* Señales por acción — apagadas y serias, no vibrantes */
-  --color-salvo: #1f7a4d;        /* verde — estoy a salvo */
-  --color-salvo-soft: #e4f0ea;
-  --color-busco: #c0392b;        /* rojo emergencia — busco a alguien */
-  --color-busco-soft: #f5e3e1;
-  --color-info: #2a5685;         /* azul acero — tengo información */
-  --color-info-soft: #e4ebf3;
-  --color-ayuda: #1f6e73;        /* verde azulado — ayuda */
-  --color-ayuda-soft: #e1eeef;
+  /* Señales por acción — codifican categoría, serias, AA sobre blanco */
+  --color-salvo: #0f7a43;          /* verde — estoy a salvo */
+  --color-salvo-soft: #e4f3ea;
+  --color-busco: #c01722;          /* rojo emergencia — busco a alguien */
+  --color-busco-soft: #fbe7e8;
+  --color-info: #10519e;           /* azul acero — tengo información */
+  --color-info-soft: #e6eefa;
+  --color-ayuda: #0d6e72;          /* verde azulado — ayuda */
+  --color-ayuda-soft: #e0eff0;
+
+  /* Tricolor nacional (acento de identidad, no decorativo de fondo) */
+  --color-flag-amarillo: #f1c40f;
+  --color-flag-azul: #1357be;
+  --color-flag-rojo: #c01722;
 
   /* Funcionales */
   --color-whatsapp: #1fa855;
-  --color-danger: #c0392b;
-  --color-ok: #1f7a4d;
+  --color-danger: #c01722;
+  --color-ok: #0f7a43;
 
-  /* Tipografías (inyectadas por next/font) — familia Plex: ingeniería, seriedad */
-  --font-display: var(--font-display), "IBM Plex Sans", system-ui, sans-serif;
-  --font-body: var(--font-body), "IBM Plex Sans", system-ui, sans-serif;
+  /* Tipografías (inyectadas por next/font) — Public Sans: la cara del
+     US Web Design System, neutra y legible bajo presión. Mono para folios. */
+  --font-display: var(--font-sans), "Public Sans", system-ui, sans-serif;
+  --font-body: var(--font-sans), "Public Sans", system-ui, sans-serif;
   --font-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Radios (cuadrados = institucional) y sombras (planas) */
+  /* Radios (poco redondeo = institucional) y sombras planas */
   --radius-card: 8px;
   --radius-btn: 6px;
-  --shadow-card: 0 1px 0 rgba(20, 24, 29, 0.04);
-  --shadow-raise: 0 2px 6px rgba(20, 24, 29, 0.1);
+  --shadow-card: 0 1px 2px rgba(11, 22, 40, 0.05);
+  --shadow-raise: 0 4px 14px rgba(11, 22, 40, 0.12);
 }
 
 @layer base {
@@ -73,16 +85,18 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
     text-wrap: balance;
   }
 
-  /* Foco visible y consistente — crítico para accesibilidad */
+  /* Foco visible y consistente — crítico bajo estrés y para accesibilidad.
+     Amarillo de seguridad + halo oscuro: visible sobre cualquier fondo. */
   :where(a, button, input, textarea, select, [tabindex]):focus-visible {
-    outline: 3px solid var(--color-info);
+    outline: 3px solid var(--color-focus);
     outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(17, 22, 28, 0.32);
     border-radius: 3px;
   }
 
@@ -118,6 +132,18 @@
     top: 12px;
   }
 
+  /* Franja tricolor nacional — barra fina de identidad (3px) */
+  .flag-rule {
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(
+      to right,
+      var(--color-flag-amarillo) 0 33.33%,
+      var(--color-flag-azul) 33.33% 66.66%,
+      var(--color-flag-rojo) 66.66% 100%
+    );
+  }
+
   /* Contenedores */
   .shell {
     width: 100%;
@@ -138,6 +164,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    font-weight: 600;
     color: var(--color-ink-soft);
   }
 
@@ -163,7 +190,7 @@
     line-height: 1;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: background-color 0.12s ease, border-color 0.12s ease;
+    transition: background-color 0.12s ease, border-color 0.12s ease, filter 0.12s ease;
   }
   .btn-primary {
     background: var(--color-azul);
@@ -173,7 +200,7 @@
     background: var(--color-azul-ink);
   }
   .btn-ghost {
-    background: transparent;
+    background: #fff;
     color: var(--color-ink);
     border-color: var(--color-line-strong);
   }
@@ -216,6 +243,7 @@
     border: 1.5px solid var(--color-line-strong);
     border-radius: var(--radius-btn);
     padding: 0.8rem 0.9rem;
+    min-height: 48px;
     font-size: 1.0625rem;
     color: var(--color-ink);
     font-family: var(--font-body);
@@ -225,6 +253,10 @@
   .textarea:focus,
   .select:focus {
     border-color: var(--color-info);
+  }
+  .input::placeholder,
+  .textarea::placeholder {
+    color: var(--color-ink-faint);
   }
   .textarea {
     min-height: 110px;

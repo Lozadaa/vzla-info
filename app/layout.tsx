@@ -1,20 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
 import { EmergencyBar } from "./components/EmergencyBar";
 import "./globals.css";
 
-const display = IBM_Plex_Sans({
+// Public Sans — la tipografía del US Web Design System: neutra, legible bajo
+// presión y oficial. Una sola familia (display + cuerpo) para minimizar el
+// payload de fuentes; mono solo para folios/identificadores.
+const sans = Public_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const body = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-body",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -49,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1b2a3a",
+  themeColor: "#0b2c54",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -59,7 +55,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="es" className={`${sans.variable} ${mono.variable}`}>
       <body>
         <a href="#contenido" className="skip-link">
           Saltar al contenido

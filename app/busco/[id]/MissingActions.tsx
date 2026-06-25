@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MissingPerson } from "@/lib/types";
+import { Share } from "../../components/icons";
 import { shareMissingMessage, waLink } from "@/lib/utils";
 
 export function MissingActions({ person }: { person: MissingPerson }) {
@@ -27,7 +28,7 @@ export function MissingActions({ person }: { person: MissingPerson }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       <button onClick={onShare} className="btn btn-wa btn-block">
-        <span aria-hidden="true">↗</span> Compartir por WhatsApp
+        <Share size={18} aria-hidden="true" /> Compartir por WhatsApp
       </button>
 
       <Link href={`/tengo-informacion?caso=${person.id}`} className="btn btn-block" style={{ background: "var(--color-info)", color: "#fff" }}>

@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { HelpKind, HelpListing, HELP_CATEGORIES, categoryEmoji, categoryLabel } from "@/lib/types";
+import { HelpKind, HelpListing, HELP_CATEGORIES, categoryLabel } from "@/lib/types";
+import { CategoryIcon, MapPin } from "../components/icons";
 import { waLink } from "@/lib/utils";
 
 // Leaflet solo en el cliente.
@@ -60,7 +61,7 @@ export function HelpExplorer({ listings }: { listings: HelpListing[] }) {
           <option value="all">Todas las categorías</option>
           {HELP_CATEGORIES.map((c) => (
             <option key={c.slug} value={c.slug}>
-              {c.emoji} {c.label}
+              {c.label}
             </option>
           ))}
         </select>
@@ -70,8 +71,16 @@ export function HelpExplorer({ listings }: { listings: HelpListing[] }) {
       <div className="overflow-hidden rounded-2xl border" style={{ borderColor: "var(--color-line-strong)", height: 340 }}>
         <HelpMap listings={filtered} />
       </div>
-      <p className="-mt-2 text-xs text-[var(--color-ink-faint)]">
-        🟢 Ofrecen ayuda · 🟠 Necesitan ayuda. Toca un pin para ver el detalle.
+      <p className="-mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--color-ink-soft)]">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-salvo)" }} aria-hidden="true" />
+          Ofrecen ayuda
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-ayuda)" }} aria-hidden="true" />
+          Necesitan ayuda
+        </span>
+        <span className="text-[var(--color-ink-faint)]">Toca un pin para ver el detalle.</span>
       </p>
 
       {/* Lista */}
@@ -87,13 +96,17 @@ export function HelpExplorer({ listings }: { listings: HelpListing[] }) {
                 <span className="tag" style={{ background: l.kind === "offer" ? "var(--color-salvo)" : "var(--color-ayuda)", color: "#fff" }}>
                   {l.kind === "offer" ? "Ofrece" : "Necesita"}
                 </span>
-                <span className="text-sm text-[var(--color-ink-soft)]">
-                  {categoryEmoji(l.category)} {categoryLabel(l.category)}
+                <span className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-soft)]">
+                  <CategoryIcon slug={l.category} size={16} />
+                  {categoryLabel(l.category)}
                 </span>
               </div>
-              <h3 className="font-extrabold leading-tight">{l.title}</h3>
+              <h3 className="font-bold leading-tight">{l.title}</h3>
               {l.description && <p className="text-sm text-[var(--color-ink-soft)]">{l.description}</p>}
-              <p className="text-sm">📍 {l.zone}</p>
+              <p className="flex items-center gap-1.5 text-sm">
+                <MapPin size={15} aria-hidden="true" className="text-[var(--color-ink-faint)]" />
+                {l.zone}
+              </p>
               {l.contact_whatsapp && (
                 <a href={waLink(l.contact_whatsapp, `Hola, te escribo por “${l.title}” en Vzla Info.`)} target="_blank" rel="noopener" className="btn btn-wa !min-h-[44px] mt-1">
                   Contactar por WhatsApp

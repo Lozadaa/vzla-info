@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { PageIntro } from "../components/PageIntro";
+import { Plus } from "../components/icons";
 import { HelpExplorer } from "./HelpExplorer";
 import { getHelpListings } from "@/lib/data";
 
@@ -30,8 +31,8 @@ export default async function Page() {
             className="card flex items-center gap-4 p-4 transition-transform hover:-translate-y-0.5"
             style={{ borderLeft: "6px solid var(--color-ayuda)" }}
           >
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl font-bold" style={{ background: "var(--color-ayuda-soft)", color: "var(--color-ayuda)" }} aria-hidden="true">
-              +
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: "var(--color-ayuda-soft)", color: "var(--color-ayuda)" }} aria-hidden="true">
+              <Plus size={22} />
             </span>
             <span>
               <span className="block font-extrabold text-lg">Publicar ayuda</span>

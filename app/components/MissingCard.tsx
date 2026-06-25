@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MissingPerson } from "@/lib/types";
+import { User } from "./icons";
 
 /** Placard "se busca": foto, nombre, última zona y folio. */
 export function MissingCard({ person }: { person: MissingPerson }) {
@@ -21,8 +22,8 @@ export function MissingCard({ person }: { person: MissingPerson }) {
             loading="lazy"
           />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-2xl text-[var(--color-ink-faint)]" aria-hidden="true">
-            👤
+          <span className="flex h-full w-full items-center justify-center text-[var(--color-ink-faint)]" aria-hidden="true">
+            <User size={32} />
           </span>
         )}
         <span

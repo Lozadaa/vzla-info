@@ -3,12 +3,12 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { HelpListing, categoryEmoji } from "@/lib/types";
+import { HelpListing } from "@/lib/types";
 import { waLink } from "@/lib/utils";
 
 // Marcadores como "pin" de color según necesita/ofrece — sin imágenes externas.
 function pin(kind: HelpListing["kind"]) {
-  const color = kind === "offer" ? "#2e7d5b" : "#c77d2e";
+  const color = kind === "offer" ? "#0f7a43" : "#0d6e72";
   return L.divIcon({
     className: "vu-pin",
     html: `<span style="
@@ -41,11 +41,9 @@ export default function HelpMap({ listings }: { listings: HelpListing[] }) {
       {withCoords.map((l) => (
         <Marker key={l.id} position={[l.lat as number, l.lng as number]} icon={pin(l.kind)}>
           <Popup>
-            <strong>
-              {categoryEmoji(l.category)} {l.title}
-            </strong>
+            <strong>{l.title}</strong>
             <br />
-            <span style={{ color: l.kind === "offer" ? "#2e7d5b" : "#c77d2e", fontWeight: 600 }}>
+            <span style={{ color: l.kind === "offer" ? "#0f7a43" : "#0d6e72", fontWeight: 600 }}>
               {l.kind === "offer" ? "Ofrece" : "Necesita"}
             </span>{" "}
             · {l.zone}

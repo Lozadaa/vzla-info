@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { downloadCSV } from "@/lib/csv";
 import { formatDate } from "@/lib/utils";
+import { Download, Check } from "../components/icons";
 
 export interface QueueItem {
   table: string;
@@ -111,7 +112,7 @@ export function Moderation({
           <div className="flex flex-wrap gap-2">
             {EXPORTABLE.map((t) => (
               <button key={t} onClick={() => exportTable(t)} className="btn btn-ghost !min-h-[40px] text-sm">
-                ⬇ {TABLE_LABELS[t]}
+                <Download size={16} aria-hidden="true" /> {TABLE_LABELS[t]}
               </button>
             ))}
           </div>
@@ -120,8 +121,9 @@ export function Moderation({
 
       {/* Colas */}
       {queue.length === 0 ? (
-        <p className="card p-8 text-center text-[var(--color-ink-soft)]">
-          🎉 No hay nada pendiente por revisar. ¡Buen trabajo!
+        <p className="card p-8 flex flex-col items-center gap-2 text-center text-[var(--color-ink-soft)]">
+          <Check size={28} aria-hidden="true" style={{ color: "var(--color-ok)" }} />
+          No hay nada pendiente por revisar. ¡Buen trabajo!
         </p>
       ) : (
         Object.entries(grouped).map(([table, list]) => (
