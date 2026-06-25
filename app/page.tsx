@@ -3,13 +3,14 @@ import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
 import { ActionCard } from "./components/ActionCard";
 import { MissingCard } from "./components/MissingCard";
+import { MuroPreview } from "./components/MuroPreview";
 import { Phone, AlertTriangle } from "./components/icons";
 import { ACTIONS } from "@/lib/types";
 import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
 import { getMissingPersons } from "@/lib/data";
 
 export default async function Home() {
-  const missing = await getMissingPersons();
+  const missing = await getMissingPersons(6);
 
   return (
     <>
@@ -29,37 +30,8 @@ export default async function Home() {
           </p>
         </section>
 
-        {/* Muro de emergencia — información ciudadana en vivo */}
-        <section className="shell mb-4">
-          <Link
-            href="/muro"
-            className="card flex items-center gap-4 p-4"
-            style={{ borderLeft: "4px solid var(--color-alert)" }}
-          >
-            <span
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md"
-              style={{ background: "var(--color-alert-soft)", color: "var(--color-alert)" }}
-              aria-hidden="true"
-            >
-              <AlertTriangle size={22} />
-            </span>
-            <span className="min-w-0">
-              <span className="flex items-center gap-2">
-                <span className="font-semibold text-lg">Muro de emergencia</span>
-                <span
-                  className="tag"
-                  style={{ background: "var(--color-alert)", color: "#fff" }}
-                >
-                  En vivo
-                </span>
-              </span>
-              <span className="block text-sm text-[var(--color-ink-soft)]">
-                Reportes recopilados de redes sobre personas desaparecidas y
-                necesidades urgentes, revisados por moderadores.
-              </span>
-            </span>
-          </Link>
-        </section>
+        {/* Muro de emergencia — banner + miniaturas (preview) */}
+        <MuroPreview />
 
         {/* Las 4 acciones — elemento dominante de la página */}
         <section className="shell" aria-label="Acciones">

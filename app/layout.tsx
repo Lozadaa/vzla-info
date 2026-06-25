@@ -57,7 +57,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={`${sans.variable} ${mono.variable}`}>
-      <body>
+      {/* suppressHydrationWarning: algunas extensiones de navegador (p. ej.
+          ColorZilla → cz-shortcut-listen) inyectan atributos en <body> antes de
+          que React hidrate, lo que dispara un falso aviso de hidratación. */}
+      <body suppressHydrationWarning>
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>

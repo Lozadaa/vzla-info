@@ -1,0 +1,30 @@
+name: Sincronizar desaparecidos
+
+# Cada 10 minutos trae nuevos reportes de la fuente y los upsertea en Supabase.
+# Nota: GitHub no garantiza el minuto exacto; en picos puede retrasarse.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {} # permite ejecutarlo a mano desde la pestaña Actions
+
+# Si una corrida tarda más de 10 min, no encimar la siguiente.
+concurrency:
+  group: sync-desaparecidos
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Ejecutar sync
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/sync-desaparecidos.mjs
