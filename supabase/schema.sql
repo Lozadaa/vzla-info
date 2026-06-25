@@ -94,6 +94,24 @@ create table if not exists public.help_listings (
   created_at timestamptz not null default now()
 );
 
+-- 05 · Muro de información ciudadana (tweets recopilados de redes)
+create table if not exists public.muro_posts (
+  id uuid primary key default gen_random_uuid(),
+  tweet_id text not null unique,
+  tweet_url text not null,
+  author_name text not null,
+  author_handle text,
+  author_verified boolean not null default false,
+  text text not null default '',
+  image_url text,
+  hashtags text[] not null default '{}',
+  category text not null default 'sin_clasificar'
+    check (category in ('desaparecido','necesita_ayuda','ofrece_ayuda','sin_clasificar')),
+  zone text,
+  status text not null default 'pending' check (status in ('pending','approved','rejected')),
+  created_at timestamptz not null default now()
+);
+
 -- Solicitudes de modificación (el usuario propone, el moderador aplica)
 create table if not exists public.modification_requests (
   id uuid primary key default gen_random_uuid(),
@@ -115,6 +133,7 @@ alter table public.safe_reports        enable row level security;
 alter table public.missing_persons     enable row level security;
 alter table public.tips                enable row level security;
 alter table public.help_listings       enable row level security;
+alter table public.muro_posts          enable row level security;
 alter table public.modification_requests enable row level security;
 
 -- profiles: cada quien ve su fila; admins ven todas.
@@ -126,7 +145,7 @@ create policy "profiles self read" on public.profiles
 do $$
 declare t text;
 begin
-  foreach t in array array['safe_reports','missing_persons','help_listings']
+  foreach t in array array['safe_reports','missing_persons','help_listings','muro_posts']
   loop
     execute format($f$
       create policy "public reads approved" on public.%1$I

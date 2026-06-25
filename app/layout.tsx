@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
+import { EmergencyButton } from "./components/EmergencyButton";
 import { EmergencyBar } from "./components/EmergencyBar";
 import "./globals.css";
 
@@ -62,6 +63,7 @@ export default function RootLayout({
         </a>
         <EmergencyBar />
         {children}
+        <EmergencyButton />
         <ServiceWorker />
       </body>
     </html>

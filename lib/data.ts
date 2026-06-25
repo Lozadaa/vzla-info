@@ -1,7 +1,18 @@
 import "server-only";
 import { createClient } from "./supabase/server";
 import { DEMO_HELP, DEMO_MISSING } from "./demo";
-import type { HelpListing, MissingPerson, SafeReport } from "./types";
+import { muroListApproved, muroListPending } from "./muro/db";
+import type { HelpListing, MissingPerson, MuroPost, SafeReport } from "./types";
+
+/** Tweets del muro aprobados (públicos). */
+export async function getMuroPosts(): Promise<MuroPost[]> {
+  return muroListApproved();
+}
+
+/** Tweets del muro pendientes de moderación. */
+export async function getMuroPending(): Promise<MuroPost[]> {
+  return muroListPending();
+}
 
 /** Personas buscadas aprobadas y aún no encontradas. */
 export async function getMissingPersons(): Promise<MissingPerson[]> {

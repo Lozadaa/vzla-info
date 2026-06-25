@@ -80,6 +80,79 @@ export function categoryLabel(slug: string): string {
   return HELP_CATEGORIES.find((c) => c.slug === slug)?.label ?? "Otros";
 }
 
+// ---- Muro de información ciudadana (tweets recopilados) ----
+
+// Triage de emergencia. El color codifica urgencia, no decora.
+export type MuroCategory =
+  | "desaparecido" // CRÍTICO
+  | "necesita_ayuda" // URGENTE
+  | "ofrece_ayuda" // RECURSO
+  | "sin_clasificar";
+
+export interface MuroCategoryMeta {
+  key: MuroCategory;
+  /** etiqueta de triage (mayúsculas) */
+  triage: string;
+  label: string;
+  accent: string;
+  accentSoft: string;
+}
+
+export const MURO_CATEGORIES: MuroCategoryMeta[] = [
+  {
+    key: "desaparecido",
+    triage: "CRÍTICO",
+    label: "Persona desaparecida",
+    accent: "var(--color-alert)",
+    accentSoft: "var(--color-alert-soft)",
+  },
+  {
+    key: "necesita_ayuda",
+    triage: "URGENTE",
+    label: "Necesita ayuda",
+    accent: "var(--color-urgent)",
+    accentSoft: "var(--color-urgent-soft)",
+  },
+  {
+    key: "ofrece_ayuda",
+    triage: "RECURSO",
+    label: "Ofrece ayuda",
+    accent: "var(--color-salvo)",
+    accentSoft: "var(--color-salvo-soft)",
+  },
+  {
+    key: "sin_clasificar",
+    triage: "SIN TRIAGE",
+    label: "Sin clasificar",
+    accent: "var(--color-ink-faint)",
+    accentSoft: "var(--color-paper-sunk)",
+  },
+];
+
+export function muroCategoryMeta(key: string): MuroCategoryMeta {
+  return (
+    MURO_CATEGORIES.find((c) => c.key === key) ??
+    MURO_CATEGORIES[MURO_CATEGORIES.length - 1]
+  );
+}
+
+// Fila de base de datos del muro (un tweet recopilado).
+export interface MuroPost {
+  id: string;
+  tweet_id: string;
+  tweet_url: string;
+  author_name: string;
+  author_handle: string | null;
+  author_verified: boolean;
+  text: string;
+  image_url: string | null; // screenshot del tweet
+  hashtags: string[];
+  category: MuroCategory;
+  zone: string | null;
+  status: ReportStatus;
+  created_at: string;
+}
+
 // ---- Filas de base de datos ----
 
 export interface SafeReport {

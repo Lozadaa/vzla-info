@@ -1,6 +1,6 @@
 // Datos de demostración: se usan SOLO cuando Supabase no está configurado,
 // para poder recorrer y evaluar el diseño sin backend.
-import type { HelpListing, MissingPerson } from "./types";
+import type { HelpListing, MissingPerson, MuroPost } from "./types";
 
 // Sin desaparecidos de ejemplo: las personas buscadas son siempre reales.
 export const DEMO_MISSING: MissingPerson[] = [];
@@ -47,5 +47,70 @@ export const DEMO_HELP: HelpListing[] = [
     contact_whatsapp: null,
     status: "approved",
     created_at: "2026-06-25T08:00:00Z",
+  },
+];
+
+// Semilla del Muro: tweets recopilados. Incluye 1 pendiente para poder
+// probar la cola de moderación de inmediato.
+export const DEMO_MURO: MuroPost[] = [
+  {
+    id: "demo-m1",
+    tweet_id: "1800000000000000001",
+    tweet_url: "https://x.com/_/status/1800000000000000001",
+    author_name: "María Rodríguez",
+    author_handle: "maria_rod_ve",
+    author_verified: false,
+    text: "Buscamos a mi hermano José Luis, 24 años. Visto por última vez el martes cerca de Petare, camisa azul. Cualquier información por favor. #BuscamosA #Venezuela",
+    image_url: null,
+    hashtags: ["BuscamosA", "Venezuela"],
+    category: "desaparecido",
+    zone: "Petare, Caracas",
+    status: "approved",
+    created_at: "2026-06-24T13:20:00Z",
+  },
+  {
+    id: "demo-m2",
+    tweet_id: "1800000000000000002",
+    tweet_url: "https://x.com/_/status/1800000000000000002",
+    author_name: "Carlos M.",
+    author_handle: "carlosm_ccs",
+    author_verified: false,
+    text: "Necesitamos medicinas para la tensión y pañales de adulto en Catia. Mi mamá está delicada, cualquier ayuda se agradece. #AyudaVzla #Medicinas",
+    image_url: null,
+    hashtags: ["AyudaVzla", "Medicinas"],
+    category: "necesita_ayuda",
+    zone: "Catia, Caracas",
+    status: "approved",
+    created_at: "2026-06-24T11:40:00Z",
+  },
+  {
+    id: "demo-m3",
+    tweet_id: "1800000000000000003",
+    tweet_url: "https://x.com/_/status/1800000000000000003",
+    author_name: "Refugio Esperanza",
+    author_handle: "refugio_esp",
+    author_verified: true,
+    text: "Tenemos espacio para 12 personas esta noche: agua, comida caliente y mantas. Familias con niños prioridad. Escríbannos. #AyudaVzla #Refugio",
+    image_url: null,
+    hashtags: ["AyudaVzla", "Refugio"],
+    category: "ofrece_ayuda",
+    zone: "Valencia",
+    status: "approved",
+    created_at: "2026-06-24T12:05:00Z",
+  },
+  {
+    id: "demo-m4",
+    tweet_id: "1800000000000000004",
+    tweet_url: "https://x.com/_/status/1800000000000000004",
+    author_name: "Ana Pérez",
+    author_handle: "anaperez_mcbo",
+    author_verified: false,
+    text: "Mi tía Carmen Estrada, 61 años, no contesta desde el jueves. Vive en Maracaibo, sector Bella Vista. Cabello canoso, usa lentes. Por favor compartir. #BuscamosA",
+    image_url: null,
+    hashtags: ["BuscamosA"],
+    category: "sin_clasificar",
+    zone: "Bella Vista, Maracaibo",
+    status: "pending",
+    created_at: "2026-06-24T10:15:00Z",
   },
 ];
