@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Venezuela Unida
 
-## Getting Started
+PWA humanitaria para que las personas puedan **reportarse a salvo, buscar familiares, aportar información verificada y ubicar ayuda cercana**, con integración a WhatsApp y un mapa comunitario moderado.
 
-First, run the development server:
+Una web con 4 acciones grandes, accesible, rápida y clara:
+
+1. **Estoy a salvo** — avisa a tu gente que estás bien.
+2. **Busco a alguien** — reporta o encuentra a un familiar.
+3. **Tengo información de alguien** — aporta un dato o avistamiento.
+4. **Necesito / ofrezco ayuda** — refugio, comida, médico y más, en el mapa.
+
+## Stack
+
+- **Next.js 16** (App Router) + TypeScript
+- **Tailwind CSS v4** — sistema de diseño propio (accesible, WCAG AA, móvil primero)
+- **Supabase** (Postgres + Storage + Auth) con **Row Level Security**
+- **Leaflet + OpenStreetMap** para el mapa de ayuda
+- **PWA** instalable con service worker y shell offline
+- Integración con **WhatsApp** (`wa.me` + Web Share API)
+
+## Modelo de seguridad
+
+El público **no necesita cuenta**. Todo lo que se envía entra como `pending` y
+**solo se publica tras la revisión de un moderador**. Las pistas (`tips`) y las
+solicitudes de modificación nunca son públicas: solo las ven los moderadores.
+Esto está garantizado a nivel de base de datos con políticas RLS (ver
+`supabase/schema.sql`).
+
+Roles de moderación: `admin` (gestiona todo, exporta CSV) y `volunteer`
+(aprueba/rechaza).
+
+## Puesta en marcha
 
 ```bash
+npm install
+cp .env.example .env.local   # rellena con tus credenciales de Supabase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sin las variables de Supabase, la app corre en **modo demo**: muestra datos de
+muestra y los formularios simulan el envío (no guardan nada). Útil para revisar
+el diseño.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Configurar Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. Ejecuta `supabase/schema.sql` en el SQL Editor (crea tablas, RLS y el bucket
+   de fotos).
+3. Copia la URL y la `anon key` (Project Settings → API) a `.env.local`.
+4. Crea un usuario en Auth y agrégalo como moderador:
+   ```sql
+   insert into public.profiles (id, email, role)
+   values ('<uuid-del-usuario>', 'mod@correo.com', 'admin');
+   ```
+5. Entra en `/admin` con ese usuario.
 
-## Learn More
+## Exportación para ONGs
 
-To learn more about Next.js, take a look at the following resources:
+Desde `/admin`, un administrador puede descargar CSV (con BOM para Excel) de
+cada categoría para compartir con ONGs, voluntarios o autoridades.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Despliegue
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pensado para **Vercel**. Configura las variables de entorno de Supabase en el
+panel del proyecto y despliega.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Plataforma comunitaria. No reemplaza a las autoridades ni a servicios de emergencia.
