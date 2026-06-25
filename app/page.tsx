@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
 import { ActionCard } from "./components/ActionCard";
@@ -21,6 +22,38 @@ export default function Home() {
             ayuda cerca. Sin necesidad de cuenta, revisado por personas y pensado
             para tu teléfono.
           </p>
+        </section>
+
+        {/* Muro de emergencia — información ciudadana en vivo */}
+        <section className="shell mb-4">
+          <Link
+            href="/muro"
+            className="card flex items-center gap-4 p-4 transition-transform hover:-translate-y-0.5"
+            style={{ borderLeft: "6px solid var(--color-alert)" }}
+          >
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
+              style={{ background: "var(--color-alert-soft)" }}
+              aria-hidden="true"
+            >
+              📡
+            </span>
+            <span className="min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="font-extrabold text-lg">Muro de emergencia</span>
+                <span
+                  className="tag"
+                  style={{ background: "var(--color-alert)", color: "#fff" }}
+                >
+                  En vivo
+                </span>
+              </span>
+              <span className="block text-sm text-[var(--color-ink-soft)]">
+                Reportes recopilados de redes sobre desaparecidos y necesidades
+                urgentes, revisados por moderadores.
+              </span>
+            </span>
+          </Link>
         </section>
 
         {/* Las 4 acciones — el corazón de la app */}

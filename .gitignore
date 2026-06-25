@@ -37,6 +37,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Muro: almacén local y capturas (solo desarrollo, no se versionan)
+/data
+/public/muro-shots
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

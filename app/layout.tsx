@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ServiceWorker } from "./components/ServiceWorker";
+import { EmergencyButton } from "./components/EmergencyButton";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -62,6 +63,7 @@ export default function RootLayout({
           Saltar al contenido
         </a>
         {children}
+        <EmergencyButton />
         <ServiceWorker />
       </body>
     </html>

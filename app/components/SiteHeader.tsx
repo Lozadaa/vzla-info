@@ -29,6 +29,13 @@ export function SiteHeader({ back }: { back?: { href: string; label: string } })
         </div>
 
         <nav className="flex items-center gap-1.5 text-sm">
+          <Link
+            href="/muro"
+            className="px-3 py-2 font-semibold rounded-lg hover:bg-[var(--color-paper-sunk)]"
+            style={{ color: "var(--color-alert)" }}
+          >
+            Muro
+          </Link>
           <Link href="/busco" className="hidden sm:inline px-3 py-2 font-semibold rounded-lg hover:bg-[var(--color-paper-sunk)]">
             Buscar
           </Link>

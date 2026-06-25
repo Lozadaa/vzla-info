@@ -40,6 +40,13 @@
   --color-danger: #b23a2e;
   --color-ok: #2e7d5b;
 
+  /* Emergencia / triage (Muro de información ciudadana) */
+  --color-alert: #c1121f;      /* rojo crítico — desaparecido */
+  --color-alert-soft: #fae3e3;
+  --color-urgent: #b45309;     /* ámbar urgente — necesita ayuda */
+  --color-urgent-soft: #f8ead2;
+  --color-ink-emergency: #0b0f14; /* banda seria de cabecera */
+
   /* Tipografías (variables inyectadas por next/font) */
   --font-display: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   --font-body: var(--font-body), "Public Sans", system-ui, sans-serif;
@@ -255,5 +262,236 @@
     font-size: 0.78rem;
     letter-spacing: 0.04em;
     color: var(--color-ink-soft);
+  }
+
+  /* ============================================================
+     Botón flotante de emergencias + panel
+     ============================================================ */
+
+  /* FAB: siempre visible, late para llamar la atención */
+  .emergency-fab {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    background: var(--color-alert);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 16px -4px rgba(193, 18, 31, 0.55), var(--shadow-lift);
+    animation: emergency-bob 2.6s ease-in-out infinite;
+  }
+  .emergency-fab:hover {
+    background: #a50f1a;
+  }
+  .emergency-fab:active {
+    transform: translateY(1px);
+  }
+  .emergency-fab__label {
+    white-space: nowrap;
+  }
+  /* Anillo que pulsa alrededor del botón */
+  .emergency-fab__pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid var(--color-alert);
+    animation: emergency-ping 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+  }
+
+  @keyframes emergency-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes emergency-ping {
+    0% { transform: scale(1); opacity: 0.7; }
+    70%, 100% { transform: scale(1.45); opacity: 0; }
+  }
+
+  /* Capa oscura + anclaje del panel abajo (móvil) / centro (desktop) */
+  .emergency-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgba(11, 15, 20, 0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    animation: emergency-fade 0.18s ease;
+  }
+  @media (min-width: 640px) {
+    .emergency-overlay {
+      align-items: center;
+      padding: 1.5rem;
+    }
+  }
+
+  /* Hoja deslizante */
+  .emergency-sheet {
+    width: 100%;
+    max-width: 32rem;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: 18px 18px 0 0;
+    box-shadow: var(--shadow-lift);
+    animation: emergency-slide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (min-width: 640px) {
+    .emergency-sheet {
+      border-radius: 18px;
+      max-height: 80vh;
+    }
+  }
+
+  .emergency-sheet__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-card);
+    border-radius: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .emergency-close {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-paper);
+    color: var(--color-ink-soft);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .emergency-close:hover {
+    background: var(--color-paper-sunk);
+  }
+
+  .emergency-sheet__body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1.1rem;
+    padding-bottom: max(1.1rem, env(safe-area-inset-bottom));
+  }
+
+  /* 911 destacado */
+  .emergency-primary {
+    display: block;
+    padding: 1.1rem;
+    border-radius: 14px;
+    background: var(--color-alert-soft);
+    border: 2px solid var(--color-alert);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .emergency-primary:hover {
+    filter: brightness(0.99);
+  }
+  .emergency-primary__num {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-alert);
+  }
+  .emergency-primary__tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-alert);
+  }
+  .emergency-primary__desc {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--color-ink-soft);
+  }
+  .emergency-primary__cta {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-weight: 700;
+    color: var(--color-alert);
+  }
+
+  /* Grupos y contactos */
+  .emergency-group__title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .emergency-contact {
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    padding: 0.75rem 0.85rem;
+  }
+  .emergency-contact__name {
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+  .emergency-contact__note {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink-faint);
+    margin-top: 0.1rem;
+  }
+  /* Cada número: objetivo táctil grande y claro */
+  .emergency-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
+    background: var(--color-alert-soft);
+    border: 1px solid var(--color-alert);
+    color: var(--color-azul-ink);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .emergency-phone:hover {
+    background: #fad2d2;
+  }
+
+  .emergency-tip {
+    margin-top: 1.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: var(--color-paper-sunk);
+    border: 1px dashed var(--color-line-strong);
+    font-size: 0.9rem;
+    color: var(--color-ink-soft);
+  }
+
+  @keyframes emergency-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes emergency-slide {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
   }
 }
