@@ -4,6 +4,7 @@ import { SiteHeader } from "../components/SiteHeader";
 import { Notice } from "../components/Notice";
 import { LoginForm } from "./LoginForm";
 import { Moderation, QueueItem } from "./Moderation";
+import { MatchPanel, MatchItem } from "./MatchPanel";
 import { createClient } from "@/lib/supabase/server";
 import { categoryLabel } from "@/lib/types";
 
@@ -63,9 +64,10 @@ export default async function Page() {
 
   // Cargar pendientes (todos) y publicados (solo si es admin, para borrar)
   const isAdmin = profile.role === "admin";
-  const [items, published] = await Promise.all([
+  const [items, published, matches] = await Promise.all([
     loadQueue(supabase),
     isAdmin ? loadPublished(supabase) : Promise.resolve([] as QueueItem[]),
+    loadMatches(supabase),
   ]);
 
   return (
@@ -84,6 +86,8 @@ export default async function Page() {
           </span>
           <span aria-hidden="true" className="shrink-0 text-[var(--color-ink-faint)]">→</span>
         </Link>
+
+        <MatchPanel matches={matches} />
 
         <Moderation
           items={items}
@@ -108,6 +112,59 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 type DB = NonNullable<Awaited<ReturnType<typeof createClient>>>;
+
+// Posibles coincidencias (reencuentros + duplicados) detectadas por el motor.
+async function loadMatches(supabase: DB): Promise<MatchItem[]> {
+  const { data: pms } = await supabase
+    .from("possible_matches")
+    .select("*")
+    .eq("status", "pending")
+    .order("score", { ascending: false })
+    .limit(150);
+  if (!pms || pms.length === 0) return [];
+
+  const missingIds = new Set<string>();
+  const safeIds = new Set<string>();
+  for (const p of pms) {
+    missingIds.add(p.missing_id);
+    if (p.other_missing_id) missingIds.add(p.other_missing_id);
+    if (p.safe_id) safeIds.add(p.safe_id);
+  }
+
+  const [{ data: missing }, { data: safes }] = await Promise.all([
+    supabase.from("missing_persons").select("id, full_name, last_seen_zone, photo_url").in("id", [...missingIds]),
+    safeIds.size
+      ? supabase.from("safe_reports").select("id, full_name, zone").in("id", [...safeIds])
+      : Promise.resolve({ data: [] as { id: string; full_name: string; zone: string }[] }),
+  ]);
+
+  const mMap = new Map((missing ?? []).map((m) => [m.id, m]));
+  const sMap = new Map((safes ?? []).map((s) => [s.id, s]));
+
+  const out: MatchItem[] = [];
+  for (const p of pms) {
+    const m = mMap.get(p.missing_id);
+    if (!m) continue;
+    if (p.kind === "reencuentro") {
+      const s = p.safe_id ? sMap.get(p.safe_id) : null;
+      if (!s) continue;
+      out.push({
+        id: p.id, kind: "reencuentro", score: p.score,
+        missing_id: m.id, missing_name: m.full_name, missing_zone: m.last_seen_zone, missing_photo: m.photo_url,
+        safe_id: s.id, safe_name: s.full_name, safe_zone: s.zone,
+      });
+    } else {
+      const o = p.other_missing_id ? mMap.get(p.other_missing_id) : null;
+      if (!o) continue;
+      out.push({
+        id: p.id, kind: "duplicado", score: p.score,
+        missing_id: m.id, missing_name: m.full_name, missing_zone: m.last_seen_zone, missing_photo: m.photo_url,
+        other_id: o.id, other_name: o.full_name, other_zone: o.last_seen_zone,
+      });
+    }
+  }
+  return out;
+}
 
 async function loadQueue(supabase: DB): Promise<QueueItem[]> {
   const pending = (t: string) =>
