@@ -185,7 +185,7 @@ export function Moderation({
         <section>
           <h2 className="eyebrow mb-2">Publicados · {published.length}</h2>
           <p className="text-sm text-[var(--color-ink-soft)] mb-3">
-            Eliminá una publicación si es falsa, duplicada o si la persona ya fue
+            Elimina una publicación si es falsa, duplicada o si la persona ya fue
             encontrada. Esta acción no se puede deshacer.
           </p>
           <ul className="flex flex-col gap-3">

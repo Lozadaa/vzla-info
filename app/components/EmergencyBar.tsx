@@ -13,7 +13,7 @@ export function EmergencyBar() {
             style={{ background: "var(--color-busco)" }}
           />
           <span>
-            ¿Tu vida está en peligro? Llamá primero a los servicios de emergencia.
+            ¿Tu vida está en peligro? Llama primero a los servicios de emergencia.
           </span>
         </p>
         <a

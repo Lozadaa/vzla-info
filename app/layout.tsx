@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s · Vzla Info",
   },
   description:
-    "Herramienta comunitaria de respuesta a emergencias: reportá tu estado, buscá a un familiar, aportá información y ubicá ayuda cercana. Verificado por moderadores.",
+    "Herramienta comunitaria de respuesta a emergencias: reporta tu estado, busca a un familiar, aporta información y ubica ayuda cercana. Verificado por moderadores.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

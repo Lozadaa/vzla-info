@@ -12,7 +12,7 @@ export default function Home() {
         <section className="shell pt-9 pb-7 sm:pt-12 sm:pb-9">
           <p className="eyebrow">Respuesta ciudadana ante emergencias</p>
           <h1 className="mt-3 text-[1.95rem] sm:text-[2.6rem] font-semibold leading-[1.08] max-w-3xl">
-            Reportá tu estado, buscá a los tuyos y ubicá ayuda.
+            Reporta tu estado, busca a los tuyos y ubica ayuda.
           </h1>
           <p className="mt-4 text-[1.05rem] text-[var(--color-ink-soft)] max-w-2xl">
             Herramienta comunitaria para reconectar con familiares y localizar
@@ -24,7 +24,7 @@ export default function Home() {
 
         {/* Las 4 acciones */}
         <section className="shell" aria-label="Acciones">
-          <h2 className="eyebrow mb-3">Elegí una opción</h2>
+          <h2 className="eyebrow mb-3">Elige una opción</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {ACTIONS.map((a) => (
               <ActionCard key={a.key} action={a} />
@@ -39,7 +39,7 @@ export default function Home() {
             <ol className="mt-3 flex flex-col gap-3 text-[0.95rem]">
               <li className="flex gap-3">
                 <span className="folio mt-0.5">1</span>
-                <span>Completás un reporte. No necesitás crear una cuenta.</span>
+                <span>Completas un reporte. No necesitas crear una cuenta.</span>
               </li>
               <li className="flex gap-3">
                 <span className="folio mt-0.5">2</span>
@@ -61,7 +61,7 @@ export default function Home() {
           >
             <h2 className="text-base font-semibold">Números de emergencia</h2>
             <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
-              Para auxilio inmediato, llamá antes de usar esta herramienta.
+              Para auxilio inmediato, llama antes de usar esta herramienta.
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-[0.95rem]">
               <li className="flex items-center justify-between gap-3">
