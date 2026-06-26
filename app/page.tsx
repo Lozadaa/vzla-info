@@ -1,287 +1,255 @@
-import Link from "next/link";
-import { SiteHeader } from "./components/SiteHeader";
-import { SiteFooter } from "./components/SiteFooter";
-import { ActionCard } from "./components/ActionCard";
-import { MissingCard } from "./components/MissingCard";
-import { MuroPreview } from "./components/MuroPreview";
-import { AyudaPreview } from "./components/AyudaPreview";
-import { AcopiosPreview } from "./components/AcopiosPreview";
-import { SismosPreview } from "./components/SismosPreview";
-import { HomeStats } from "./components/HomeStats";
-import { Phone, AlertTriangle } from "./components/icons";
-import { ACTIONS } from "@/lib/types";
-import { EMERGENCY_PRIMARY, EMERGENCY_QUICK } from "@/lib/emergency";
-import {
-  getMissingPersons,
-  getReunionsCount,
-  getSituationMap,
-  getHelpListings,
-} from "@/lib/data";
-import { MapView } from "./mapa/MapView";
+import type { Metadata } from "next";
 
-export default async function Home() {
-  const [missing, reunions, situation, help] = await Promise.all([
-    getMissingPersons(6),
-    getReunionsCount(),
-    getSituationMap(),
-    getHelpListings(),
-  ]);
+export const metadata: Metadata = {
+  title: "Vzla Info — Gracias. La comunidad sigue unida.",
+};
 
-  const stats = [
-    { n: situation.total, label: "personas buscadas", color: "var(--color-busco)" },
-    { n: reunions, label: "reportadas como localizadas", color: "var(--color-salvo)" },
-    { n: help.length, label: "avisos de ayuda", color: "var(--color-ayuda)" },
-  ];
+const STARS = Array.from({ length: 8 });
 
+export default function Home() {
   return (
-    <>
-      <SiteHeader />
-      <main id="contenido">
-        {/* Encabezado — directo y funcional, sin tono publicitario */}
-        <section className="shell pt-9 pb-7 sm:pt-12 sm:pb-9">
-          <p className="eyebrow">Respuesta ciudadana ante emergencias</p>
-          <h1 className="mt-3 text-[2rem] sm:text-[2.7rem] font-extrabold leading-[1.05] max-w-3xl">
-            Reporta tu estado, busca a los tuyos y ubica ayuda.
-          </h1>
-          <p className="mt-4 text-[1.05rem] text-[var(--color-ink-soft)] max-w-2xl">
-            Herramienta comunitaria para reconectar con familiares y localizar
-            recursos después de una emergencia. Cada reporte se verifica antes de
-            publicarse. No reemplaza a los servicios oficiales de emergencia.
+    <main
+      style={{
+        position: "relative",
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2.5rem 1.25rem",
+        overflow: "hidden",
+        // Bandera de Venezuela de fondo (franjas horizontales).
+        background:
+          "linear-gradient(to bottom, #f1c40f 0 33.34%, #1357be 33.34% 66.67%, #cf142b 66.67% 100%)",
+      }}
+    >
+      {/* Arco de 8 estrellas blancas sobre la franja azul */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "flex",
+          justifyContent: "center",
+          gap: "min(6vw, 3.5rem)",
+          pointerEvents: "none",
+          opacity: 0.95,
+        }}
+      >
+        {STARS.map((_, i) => (
+          <span
+            key={i}
+            style={{
+              fontSize: "clamp(1rem, 3vw, 2rem)",
+              color: "#fff",
+              transform: `translateY(${i === 0 || i === 7 ? "10px" : i === 3 || i === 4 ? "-10px" : "0"})`,
+            }}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+
+      {/* Velo oscuro para legibilidad */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(8, 18, 33, 0.62)",
+        }}
+      />
+
+      {/* Tarjeta del comunicado */}
+      <article
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "44rem",
+          background: "rgba(255, 255, 255, 0.97)",
+          borderRadius: 16,
+          padding: "clamp(1.5rem, 4vw, 2.75rem)",
+          boxShadow: "0 30px 80px -30px rgba(0,0,0,0.6)",
+          color: "var(--color-ink)",
+        }}
+      >
+        <p
+          className="eyebrow"
+          style={{ color: "var(--color-flag-rojo)", letterSpacing: "0.12em" }}
+        >
+          Comunicado · Venezuela, junio 2026
+        </p>
+
+        <h1
+          style={{
+            marginTop: "0.75rem",
+            fontSize: "clamp(1.8rem, 5vw, 2.6rem)",
+            fontWeight: 800,
+            lineHeight: 1.08,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Gracias. Sigamos juntos donde la comunidad ya está unida.
+        </h1>
+
+        <div
+          style={{
+            marginTop: "1.25rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.9rem",
+            fontSize: "1.05rem",
+            color: "var(--color-ink-soft)",
+            lineHeight: 1.6,
+          }}
+        >
+          <p>
+            Creamos esta página —{" "}
+            <a
+              href="https://x.com/lozadapp"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--color-info)", fontWeight: 600 }}
+            >
+              @lozadapp
+            </a>{" "}
+            y{" "}
+            <a
+              href="https://x.com/sirubencho"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--color-info)", fontWeight: 600 }}
+            >
+              @sirubencho
+            </a>
+            — en las horas siguientes al terremoto, con una idea simple: reunir en
+            un solo lugar lo esencial para reencontrarnos. Reportarse a salvo,
+            buscar a un familiar, aportar información verificada y ubicar ayuda
+            cercana.
           </p>
-        </section>
-
-        {/* Estadísticas — cifras consolidadas, antes dispersas por el inicio */}
-        <HomeStats stats={stats} />
-
-        {/* Las 4 acciones — primer bloque interactivo del inicio */}
-        <section className="shell mt-8" aria-label="Acciones">
-          <div className="mb-2.5 flex items-baseline justify-between gap-3">
-            <h2 className="eyebrow">Elige una opción</h2>
-            <span className="tap-hint">Toca una opción</span>
-          </div>
-          <div className="grid gap-2.5 sm:grid-cols-2">
-
-            {[...ACTIONS].sort((a, b) =>
-              a.key === "busco" ? -1 : b.key === "busco" ? 1 : 0,
-            ).map((a) => (
-              <ActionCard key={a.key} action={a} featured={a.key === "busco"} />
-            ))}
-          </div>
-        </section>
-
-        {/* Personas buscadas — visibles directamente en el inicio */}
-        <section className="shell mt-9" aria-label="Personas buscadas">
-          <div className="mb-1.5 flex items-end justify-between gap-3">
-            <h2 className="text-lg font-bold" style={{ color: "var(--color-busco)" }}>
-              Personas buscadas
-            </h2>
-            <Link
-              href="/busco"
-              className="text-sm font-semibold underline underline-offset-2"
-            >
-              Ver todas →
-            </Link>
-          </div>
-          {missing.length > 0 && (
-            <p className="tap-hint mb-3">Toca una ficha para ver el detalle</p>
-          )}
-
-          {missing.length === 0 ? (
-            <p className="card p-5 text-sm text-[var(--color-ink-soft)]">
-              Aún no hay personas reportadas públicamente.{" "}
-              <Link
-                href="/busco/nuevo"
-                className="font-semibold underline underline-offset-2"
-                style={{ color: "var(--color-busco)" }}
-              >
-                Reportar a alguien
-              </Link>
-              .
-            </p>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {missing.slice(0, 6).map((p) => (
-                <MissingCard key={p.id} person={p} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Mapa de situación — dónde se busca a más personas */}
-        {situation.clusters.length > 0 && (
-          <section className="shell mt-9" aria-label="Mapa de situación">
-            <div className="mb-3 flex items-end justify-between gap-3">
-              <h2 className="text-lg font-bold">Mapa de situación</h2>
-              <Link href="/mapa" className="text-sm font-semibold underline underline-offset-2">
-                Ver mapa completo →
-              </Link>
-            </div>
-            <div
-              className="overflow-hidden rounded-2xl border"
-              style={{ borderColor: "var(--color-line-strong)", height: 320 }}
-            >
-              <MapView clusters={situation.clusters} />
-            </div>
-            <p className="mt-2 text-xs text-[var(--color-ink-faint)]">
-              Agrupadas por la última zona donde fueron vistas. El círculo más
-              grande, más personas. Toca uno para ver el detalle.
-            </p>
-          </section>
-        )}
-
-        {/* Muro de emergencia — banner + miniaturas (preview) */}
-        <div className="mt-9">
-          <MuroPreview />
+          <p>
+            En estos días, dentro de la comunidad se formaron equipos que trabajan
+            casi <strong style={{ color: "var(--color-ink)" }}>24/7</strong>{" "}
+            organizando, normalizando y completando toda la data de la situación,
+            con un alcance y una dedicación enormes. Lo más útil que podemos hacer
+            es <strong style={{ color: "var(--color-ink)" }}>sumar fuerzas ahí</strong>,
+            no dividirlas.
+          </p>
+          <p>
+            Por eso retiramos esta herramienta y te dirigimos a las plataformas
+            donde hoy está el esfuerzo principal:
+          </p>
         </div>
 
-        {/* Ayuda — banner + miniaturas (preview) de necesito / ofrezco */}
-        <AyudaPreview />
-
-        {/* Centros de acopio — dónde donar */}
-        <AcopiosPreview />
-
-        {/* Actividad sísmica — réplicas e historial (USGS), en vivo */}
-        <SismosPreview />
-
-        {/* Contexto — por qué existe la plataforma ahora (colapsable) */}
-        <section className="shell mt-9 mb-4">
-          <details
-            className="group card p-0 overflow-hidden"
-            style={{ borderLeft: "4px solid var(--color-alert)" }}
+        {/* Enlaces a las plataformas activas */}
+        <div
+          style={{
+            marginTop: "1.5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+          }}
+        >
+          <a
+            href="https://terremotovenezuela.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-block"
+            style={{
+              background: "var(--color-azul)",
+              color: "#fff",
+              justifyContent: "space-between",
+              minHeight: 60,
+              fontSize: "1.05rem",
+            }}
           >
-            <summary className="cursor-pointer select-none list-none p-5 [&::-webkit-details-marker]:hidden">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="eyebrow" style={{ color: "var(--color-alert)" }}>
-                    Contexto · 24 de junio de 2026
-                  </p>
-                  <h2 className="mt-1.5 text-lg font-bold">Terremotos de Yaracuy</h2>
-                </div>
-                <span className="tap-hint mt-1 shrink-0">
-                  <span className="group-open:hidden">Ver detalle</span>
-                  <span className="hidden group-open:inline">Ocultar</span>
-                </span>
-              </div>
-              <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                <div>
-                  <dt className="folio">Magnitud</dt>
-                  <dd className="font-bold tabular-nums">7,2 y 7,5 Mw</dd>
-                </div>
-                <div>
-                  <dt className="folio">Fallecidos</dt>
-                  <dd className="font-bold tabular-nums">32+</dd>
-                </div>
-                <div>
-                  <dt className="folio">Heridos</dt>
-                  <dd className="font-bold tabular-nums">700+</dd>
-                </div>
-                <div>
-                  <dt className="folio">Intensidad</dt>
-                  <dd className="font-bold">IX Mercalli</dd>
-                </div>
-              </dl>
-            </summary>
-            <div className="px-5 pb-5">
-              <p className="text-[0.97rem] text-[var(--color-ink-soft)]">
-                El 24 de junio de 2026, dos sismos sucesivos de magnitud 7,2 y 7,5
-                sacudieron el occidente de Venezuela, con epicentro en Yaracuy
-                (cerca de San Felipe y Yumare). Hubo derrumbes y daños en Caracas,
-                La Guaira, Valencia, Maracay y otros estados, y afectación del
-                aeropuerto de Maiquetía. Esta plataforma reúne reportes ciudadanos
-                para reencontrar familiares y coordinar ayuda.
-              </p>
-              <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
-                Cifras preliminares; pueden variar conforme avancen las labores de
-                rescate. Si tu vida corre peligro, llama al 911 antes de usar esta
-                herramienta.
-              </p>
-            </div>
-          </details>
-        </section>
+            <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1.2 }}>
+              <span style={{ fontWeight: 700 }}>terremotovenezuela.app</span>
+              <span style={{ fontWeight: 400, fontSize: "0.82rem", opacity: 0.9 }}>
+                Mapa de emergencia, rescate y personas desaparecidas
+              </span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
 
-        {/* Llamada rápida — acceso directo a los servicios de auxilio */}
-        <section className="shell mt-9" aria-label="Llamada rápida de emergencia">
-          <div
-            className="card p-5"
-            style={{ borderLeft: "4px solid var(--color-alert)" }}
+          <a
+            href="https://desaparecidosterremotovenezuela.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-block"
+            style={{
+              background: "var(--color-busco)",
+              color: "#fff",
+              justifyContent: "space-between",
+              minHeight: 60,
+              fontSize: "1.05rem",
+            }}
           >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="flex items-center gap-2 text-base font-bold">
-                <AlertTriangle size={20} aria-hidden="true" style={{ color: "var(--color-alert)" }} />
-                Llamada rápida
-              </h2>
-              <span className="tap-hint" style={{ color: "var(--color-alert)" }}>
-                Toca para llamar
+            <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1.2 }}>
+              <span style={{ fontWeight: 700 }}>desaparecidosterremotovenezuela.com</span>
+              <span style={{ fontWeight: 400, fontSize: "0.82rem", opacity: 0.9 }}>
+                Registro de personas desaparecidas
               </span>
-            </div>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
 
-            {/* 911 destacado */}
-            <a
-              href={`tel:${EMERGENCY_PRIMARY.tel}`}
-              className="btn btn-block mt-3 !justify-start gap-3 !min-h-[64px]"
-              style={{ background: "var(--color-alert)", color: "#fff" }}
-            >
-              <Phone size={24} aria-hidden="true" />
-              <span className="flex flex-col items-start leading-tight">
-                <span className="text-[1.25rem] font-extrabold tabular-nums">911 · Emergencias</span>
-                <span className="text-[0.8rem] font-normal opacity-90">
-                  Número único nacional · policía, bomberos y ambulancias
-                </span>
+          <a
+            href="https://discord.gg/5hhaQxU3PM"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-block"
+            style={{
+              background: "#5865F2",
+              color: "#fff",
+              justifyContent: "space-between",
+              minHeight: 60,
+              fontSize: "1.05rem",
+            }}
+          >
+            <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1.2 }}>
+              <span style={{ fontWeight: 700 }}>Discord de voluntarios</span>
+              <span style={{ fontWeight: 400, fontSize: "0.82rem", opacity: 0.9 }}>
+                Únete al equipo que coordina la data y los rescates
               </span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        {/* Créditos */}
+        <footer
+          style={{
+            marginTop: "1.75rem",
+            paddingTop: "1.25rem",
+            borderTop: "1px solid var(--color-line)",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.75rem",
+            fontSize: "0.9rem",
+            color: "var(--color-ink-soft)",
+          }}
+        >
+          <span>
+            Hecho con cariño por{" "}
+            <a href="https://x.com/lozadapp" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, color: "var(--color-ink)" }}>
+              @lozadapp
+            </a>{" "}
+            y{" "}
+            <a href="https://x.com/sirubencho" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, color: "var(--color-ink)" }}>
+              @sirubencho
             </a>
-
-            {/* Demás servicios */}
-            <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {EMERGENCY_QUICK.map((q) => (
-                <li key={q.tel}>
-                  <a
-                    href={`tel:${q.tel}`}
-                    className="flex h-full items-center gap-2.5 rounded-md border px-3 py-2.5 hover:bg-[var(--color-paper-sunk)]"
-                    style={{ borderColor: "var(--color-line-strong)", minHeight: 56 }}
-                  >
-                    <Phone size={17} aria-hidden="true" className="shrink-0" style={{ color: "var(--color-alert)" }} />
-                    <span className="min-w-0 flex flex-col leading-tight">
-                      <span className="truncate text-sm font-semibold">{q.name}</span>
-                      <span className="folio truncate">{q.label}</span>
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
-              Los números 0212 son referenciales de Caracas y la Gran Caracas. En
-              otros estados hay líneas locales distintas. Para más, abre el botón
-              de emergencias.
-            </p>
-          </div>
-        </section>
-
-        {/* Cómo funciona */}
-        <section className="shell mt-4 mb-2">
-          <div className="card p-5">
-            <h2 className="text-base font-bold">Cómo funciona</h2>
-            <ol className="mt-3 grid gap-3 text-[0.95rem] sm:grid-cols-3">
-              <li className="flex gap-3">
-                <span className="folio mt-0.5">1</span>
-                <span>Completas un reporte. No necesitas crear una cuenta.</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="folio mt-0.5">2</span>
-                <span>Un moderador lo revisa antes de hacerlo público.</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="folio mt-0.5">3</span>
-                <span>
-                  Una vez aprobado, aparece en la lista o el mapa y puede
-                  difundirse por WhatsApp.
-                </span>
-              </li>
-            </ol>
-          </div>
-        </section>
-      </main>
-      <SiteFooter />
-    </>
+            .
+          </span>
+          <span style={{ fontWeight: 600, color: "var(--color-ink)" }}>
+            Por los que faltan. Por los que esperan.
+          </span>
+        </footer>
+      </article>
+    </main>
   );
 }

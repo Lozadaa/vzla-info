@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
-import { ServiceWorker } from "./components/ServiceWorker";
-import { EmergencyButton } from "./components/EmergencyButton";
-import { EmergencyBar } from "./components/EmergencyBar";
-import { PageViews } from "./components/PageViews";
 import "./globals.css";
 
 // Public Sans — la tipografía del US Web Design System: neutra, legible bajo
@@ -25,22 +21,13 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vzla.info"),
-  title: {
-    default: "Vzla Info — Reportar tu estado, buscar familiares y ubicar ayuda",
-    template: "%s · Vzla Info",
-  },
+  title: "Vzla Info — Gracias. La comunidad sigue unida.",
   description:
-    "Herramienta comunitaria de respuesta a emergencias: reporta tu estado, busca a un familiar, aporta información y ubica ayuda cercana. Verificado por moderadores.",
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Vzla Info",
-  },
+    "Creamos esta página tras el terremoto en Venezuela. Hoy la comunidad organiza la data en plataformas dedicadas. Te dirigimos a ellas.",
   openGraph: {
-    title: "Vzla Info",
+    title: "Vzla Info — Gracias. La comunidad sigue unida.",
     description:
-      "Respuesta ciudadana ante emergencias: reportar tu estado, buscar a un familiar, aportar información y ubicar ayuda.",
+      "Creamos esta página tras el terremoto en Venezuela. Hoy la comunidad organiza la data en plataformas dedicadas. Te dirigimos a ellas.",
     type: "website",
     locale: "es_VE",
   },
@@ -61,16 +48,7 @@ export default function RootLayout({
       {/* suppressHydrationWarning: algunas extensiones de navegador (p. ej.
           ColorZilla → cz-shortcut-listen) inyectan atributos en <body> antes de
           que React hidrate, lo que dispara un falso aviso de hidratación. */}
-      <body suppressHydrationWarning>
-        <a href="#contenido" className="skip-link">
-          Saltar al contenido
-        </a>
-        <EmergencyBar />
-        {children}
-        <EmergencyButton />
-        <ServiceWorker />
-        <PageViews />
-      </body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
