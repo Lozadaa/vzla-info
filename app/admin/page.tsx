@@ -6,6 +6,7 @@ import { Moderation, QueueItem } from "./Moderation";
 import { MatchPanel, MatchItem } from "./MatchPanel";
 import { ExportPanel } from "./ExportPanel";
 import { MuroReviewCard } from "./MuroReviewCard";
+import { VisitsPanel, VisitStats } from "./VisitsPanel";
 import { createClient } from "@/lib/supabase/server";
 import { getMuroPending } from "@/lib/data";
 import { categoryLabel } from "@/lib/types";
@@ -66,16 +67,25 @@ export default async function Page() {
 
   // Cargar pendientes (todos), publicados (solo admin), coincidencias y muro.
   const isAdmin = profile.role === "admin";
-  const [items, published, matches, muroPending] = await Promise.all([
+  // ¿Es dueño? Lo decide la BD (tabla super_admins vía is_superadmin()), no el
+  // código — así no hay correos en el repo público. La función usa el correo
+  // verificado de Auth, no falsificable.
+  const { data: isSuperData } = await supabase.rpc("is_superadmin");
+  const isSuper = isSuperData === true;
+  const [items, published, matches, muroPending, visits] = await Promise.all([
     loadQueue(supabase),
     isAdmin ? loadPublished(supabase) : Promise.resolve([] as QueueItem[]),
     loadMatches(supabase),
     getMuroPending(),
+    isSuper ? loadVisits(supabase) : Promise.resolve(null),
   ]);
 
   return (
     <Shell>
       <div className="flex flex-col gap-5">
+        {/* Visitas reales a la web — solo super-admins (dueños) */}
+        {isSuper && <VisitsPanel stats={visits} />}
+
         {/* 1 · Descargar (export CSV) — arriba del todo, solo admin */}
         {isAdmin && <ExportPanel />}
 
@@ -166,6 +176,18 @@ async function loadMatches(supabase: DB): Promise<MatchItem[]> {
     }
   }
   return out;
+}
+
+// Cifras de visitas (analítica propia). Devuelve null si la migración aún no
+// se aplicó (la función RPC no existe), para no romper el panel.
+async function loadVisits(supabase: DB): Promise<VisitStats | null> {
+  try {
+    const { data, error } = await supabase.rpc("visit_stats");
+    if (error || !data) return null;
+    return data as unknown as VisitStats;
+  } catch {
+    return null;
+  }
 }
 
 async function loadQueue(supabase: DB): Promise<QueueItem[]> {
